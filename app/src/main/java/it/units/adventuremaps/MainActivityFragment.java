@@ -28,7 +28,7 @@ public class MainActivityFragment extends Fragment {
     private final OnClickListener experienceBtnClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent mapsIntent = new Intent(getActivity(), MapsActivity.class);
+            Intent mapsIntent = new Intent(getActivity(), MapsActivityFragment.class);
             startActivity(mapsIntent);
         }
     };

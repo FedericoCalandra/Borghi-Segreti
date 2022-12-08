@@ -2,4 +2,7 @@
 <resources>
     <dimen name="spacing">8dp</dimen>
     <dimen name="buttons_elevation">4dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="main_fragment_height">500dp</dimen>
+    <dimen name="main_view_top_margin">8dp</dimen>
 </resources>
