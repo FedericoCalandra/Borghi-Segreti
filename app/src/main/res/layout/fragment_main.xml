@@ -49,7 +49,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/imageButton4"
+                android:id="@+id/logOutButton"
                 android:layout_height="200dp"
                 android:layout_width="match_parent"
                 android:layout_weight="1"

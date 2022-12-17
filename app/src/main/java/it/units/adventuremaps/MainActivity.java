@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Intent signInIntent = new Intent(this, SignInActivity.class);
-            startActivity(signInIntent);
+            Intent firstIntent = new Intent(this, ActivityFirst.class);
+            startActivity(firstIntent);
         }
     }
 
@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Intent signInIntent = new Intent(this, SignInActivity.class);
-            startActivity(signInIntent);
+            Intent firstIntent = new Intent(this, ActivityFirst.class);
+            startActivity(firstIntent);
         }
     }
 

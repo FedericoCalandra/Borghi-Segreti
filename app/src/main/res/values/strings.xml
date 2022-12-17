@@ -3,4 +3,10 @@
     <string name="title_activity_maps">MapsActivity</string>
     <string name="action_settings">Impostazioni</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="sign_in_button_text">Sign In</string>
+    <string name="log_in_button_text">Log In</string>
+    <string name="logout_confirmation">Are you sure you want to log out?</string>
+    <string name="dialog_title">Log Out</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 </resources>
