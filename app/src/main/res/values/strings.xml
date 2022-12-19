@@ -9,4 +9,7 @@
     <string name="dialog_title">Log Out</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
+    <string name="activate_location_title">Activate Location</string>
+    <string name="activate_location_message">Please turn on your location to use this function.</string>
+    <string name="activate_location_positive_button">Turn on location</string>
 </resources>
