@@ -41,10 +41,11 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-public class MapsActivityFragment extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivityFragment extends FragmentActivity implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener {
 
     private static final int PERMISSION_ID = 44;
-    private static final String TAG = "LOCATION";
+    private static final String TAG = "MY_LOCATION";
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
     private Location userLocation;
@@ -69,6 +70,7 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.d(TAG, "Map is ready");
         mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
         ExperiencesLoader loader = new ExperiencesLoader();
 
         loader.addDataEventListener(new DataEventListener() {
@@ -82,12 +84,21 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
 
     }
 
+    @Override
+    public boolean onMarkerClick(@NonNull final Marker marker) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f));
+        BottomSheetFragment blankFragment = new BottomSheetFragment();
+        blankFragment.show(getSupportFragmentManager(),blankFragment.getTag());
+        return true;
+    }
+
     private void drawExperienceMarker(Experience experience) {
         Marker experienceMarker = mMap.addMarker(new MarkerOptions()
                 .position(experience.getCoordinates())
                 .title(experience.getName())
                 .snippet(experience.getDescription())
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
     }
 
     public void showUserLocation() {
