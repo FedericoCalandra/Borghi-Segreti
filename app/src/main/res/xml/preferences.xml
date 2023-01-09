@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-</PreferenceScreen>
+    <SwitchPreference
+        android:key="@string/test_key"
+        android:defaultValue="false"
+        android:summaryOff="Test mode off"
+        android:summaryOn="Test mode on"
+        android:title="Enable Test Mode" />
+
+</androidx.preference.PreferenceScreen>

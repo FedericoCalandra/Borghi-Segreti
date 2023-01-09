@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -49,7 +51,10 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
     private Location userLocation;
+    private Location overriddenUserLocation = new Location("");
     private Marker userLocationMarker;
+    private boolean isTestModeEnabled;
+    private boolean isMapReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +67,13 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
                 .findFragmentById(R.id.map);
         Objects.requireNonNull(mapFragment).getMapAsync(this);
 
+        overriddenUserLocation.setLatitude(0);
+        overriddenUserLocation.setLongitude(0);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        isTestModeEnabled = sharedPreferences.getBoolean(getString(R.string.test_key), false);
+        Log.d(TAG, "TestMode = " + isTestModeEnabled);
+
         getLastLocation();
 
     }
@@ -69,8 +81,10 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.d(TAG, "Map is ready");
+        isMapReady = true;
         mMap = googleMap;
         mMap.setOnMarkerClickListener(this);
+        showUserLocation();
         ExperiencesLoader loader = new ExperiencesLoader();
 
         loader.addDataEventListener(new DataEventListener() {
@@ -108,55 +122,64 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
                 .title("User Location")
                 .icon(BitmapDescriptorFactory.fromAsset("icons/userLocationIcon.png")));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(userCoordinates));
+
     }
 
     public void updateUserLocation() {
         LatLng userCoordinates = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
-        userLocationMarker.setPosition(userCoordinates);
+        if (userLocationMarker != null) {
+            userLocationMarker.setPosition(userCoordinates);
+        }
     }
 
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
-        if (checkPermissions()) {
-
-            if (isLocationEnabled()) {
-
-                fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
-                    Location location = task.getResult();
-                    if (location != null) {
-                        this.userLocation = location;
-                        Log.d(TAG, "User localized @ " + userLocation);
-                        showUserLocation();
-                    }
-                    requestNewLocationData();
-                });
-            } else {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-                alertDialogBuilder.setMessage(R.string.activate_location_message)
-                        .setTitle(R.string.activate_location_title);
-
-                alertDialogBuilder.setPositiveButton(R.string.activate_location_positive_button,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivity(intent);
-                            }
-                        });
-                alertDialogBuilder.setNegativeButton(R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int id) {
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                            }
-                        });
-
-                AlertDialog dialog = alertDialogBuilder.create();
-                dialog.show();
-            }
+        if (isTestModeEnabled) {
+            Log.d(TAG, "TestMode: overriding user location...");
+            userLocation = overriddenUserLocation;
+            Log.d(TAG, "TestMode: new user location = " + userLocation);
         } else {
-            requestPermissions();
+
+            if (checkPermissions()) {
+
+                if (isLocationEnabled()) {
+
+                    fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+                        Location location = task.getResult();
+                        if (location != null) {
+                            this.userLocation = location;
+                            Log.d(TAG, "User localized @ " + userLocation);
+                        }
+                        requestNewLocationData();
+                    });
+                } else {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                    alertDialogBuilder.setMessage(R.string.activate_location_message)
+                            .setTitle(R.string.activate_location_title);
+
+                    alertDialogBuilder.setPositiveButton(R.string.activate_location_positive_button,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    startActivity(intent);
+                                }
+                            });
+                    alertDialogBuilder.setNegativeButton(R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int id) {
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+
+                    AlertDialog dialog = alertDialogBuilder.create();
+                    dialog.show();
+                }
+            } else {
+                requestPermissions();
+            }
         }
     }
 

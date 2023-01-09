@@ -17,8 +17,11 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/white"
             app:popupTheme="@style/Theme.AdventureMaps" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <include layout="@layout/content_settings"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
