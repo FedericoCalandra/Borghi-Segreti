@@ -107,6 +107,7 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
     public boolean onMarkerClick(@NonNull final Marker marker) {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f));
         BottomSheetFragment blankFragment = new BottomSheetFragment();
+
         blankFragment.show(getSupportFragmentManager(),blankFragment.getTag());
         return true;
     }
