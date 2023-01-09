@@ -44,7 +44,7 @@ import java.util.Objects;
 
 
 public class MapsActivityFragment extends FragmentActivity implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapLongClickListener {
 
     private static final int PERMISSION_ID = 44;
     private static final String TAG = "MY_LOCATION";
@@ -81,9 +81,14 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.d(TAG, "Map is ready");
-        isMapReady = true;
         mMap = googleMap;
+        isMapReady = true;
         mMap.setOnMarkerClickListener(this);
+
+        if (isTestModeEnabled) {
+            mMap.setOnMapLongClickListener(this);
+        }
+
         showUserLocation();
         ExperiencesLoader loader = new ExperiencesLoader();
 
@@ -106,6 +111,13 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
         return true;
     }
 
+    @Override
+    public void onMapLongClick(LatLng point) {
+        overriddenUserLocation.setLatitude(point.latitude);
+        overriddenUserLocation.setLongitude(point.longitude);
+        updateUserLocation();
+    }
+
     private void drawExperienceMarker(Experience experience) {
         Marker experienceMarker = mMap.addMarker(new MarkerOptions()
                 .position(experience.getCoordinates())
@@ -116,13 +128,14 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
     }
 
     public void showUserLocation() {
-        LatLng userCoordinates = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
-        userLocationMarker = mMap.addMarker(new MarkerOptions()
-                .position(userCoordinates)
-                .title("User Location")
-                .icon(BitmapDescriptorFactory.fromAsset("icons/userLocationIcon.png")));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(userCoordinates));
-
+        if (userLocation != null) {
+            LatLng userCoordinates = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+            userLocationMarker = mMap.addMarker(new MarkerOptions()
+                    .position(userCoordinates)
+                    .title("User Location")
+                    .icon(BitmapDescriptorFactory.fromAsset("icons/userLocationIcon.png")));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(userCoordinates));
+        }
     }
 
     public void updateUserLocation() {
@@ -151,6 +164,9 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
                             Log.d(TAG, "User localized @ " + userLocation);
                         }
                         requestNewLocationData();
+                        if (isMapReady) {
+                            showUserLocation();
+                        }
                     });
                 } else {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
