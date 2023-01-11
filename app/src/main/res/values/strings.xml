@@ -14,4 +14,6 @@
     <string name="activate_location_positive_button">Turn on location</string>
     <string name="title_activity_settings">Settings</string>
     <string name="test_key">test_mode</string>
+    <string name="setObjective_buttonText">set as objective</string>
+    <string name="removeObjective_buttonText">remove as objective</string>
 </resources>

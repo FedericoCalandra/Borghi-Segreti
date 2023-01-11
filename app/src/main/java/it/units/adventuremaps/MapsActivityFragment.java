@@ -15,8 +15,6 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View.OnClickListener;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -33,13 +31,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.internal.ContextUtils;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -55,6 +56,9 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
     private Marker userLocationMarker;
     private boolean isTestModeEnabled;
     private boolean isMapReady = false;
+    private ArrayList<Experience> experiences;
+    private final Map<Marker, Experience> markerExperienceMap = new HashMap<>();
+    private Marker objectiveMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,13 +94,17 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
         }
 
         showUserLocation();
-        ExperiencesLoader loader = new ExperiencesLoader();
 
+        ExperiencesLoader loader = new ExperiencesLoader(FirebaseAuth.getInstance().getCurrentUser());
         loader.addDataEventListener(new DataEventListener() {
             @Override
-            public void onExperienceDataAvailable(ArrayList<Experience> experiences) {
+            public void onExperienceDataAvailable(ArrayList<Experience> experiencesLoaded) {
+                experiences = experiencesLoaded;
                 for (Experience experience : experiences) {
-                    drawExperienceMarker(experience);
+                    Marker marker = drawExperienceMarker(experience);
+                    if (experience.getIsTheObjective()) {
+                        objectiveMarker = marker;
+                    }
                 }
             }
         });
@@ -106,7 +114,8 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
     @Override
     public boolean onMarkerClick(@NonNull final Marker marker) {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f));
-        BottomSheetFragment blankFragment = new BottomSheetFragment();
+        Experience experience = markerExperienceMap.get(marker);
+        BottomSheetFragment blankFragment = new BottomSheetFragment(experience, marker, this);
 
         blankFragment.show(getSupportFragmentManager(),blankFragment.getTag());
         return true;
@@ -119,16 +128,36 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
         updateUserLocation();
     }
 
-    private void drawExperienceMarker(Experience experience) {
-        Marker experienceMarker = mMap.addMarker(new MarkerOptions()
+    public void redrawExperienceMarker(Marker oldMarker) {
+        oldMarker.remove();
+        if (objectiveMarker != null) {
+            objectiveMarker.remove();
+            drawExperienceMarker(Objects.requireNonNull(markerExperienceMap.get(objectiveMarker)));
+        }
+        objectiveMarker = drawExperienceMarker(Objects.requireNonNull(markerExperienceMap.get(oldMarker)));
+    }
+
+    public Marker drawExperienceMarker(Experience experience) {
+        BitmapDescriptor descriptor;
+
+        if (experience.getIsTheObjective()) {
+            descriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+        } else {
+            descriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
+        }
+
+        Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(experience.getCoordinates())
                 .title(experience.getName())
                 .snippet(experience.getDescription())
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                .icon(descriptor));
 
+        markerExperienceMap.put(marker, experience);
+
+        return marker;
     }
 
-    public void showUserLocation() {
+    private void showUserLocation() {
         if (userLocation != null) {
             LatLng userCoordinates = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
             userLocationMarker = mMap.addMarker(new MarkerOptions()
@@ -249,5 +278,9 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
                 getLastLocation();
             }
         }
+    }
+
+    public ArrayList<Experience> getExperiences() {
+        return experiences;
     }
 }

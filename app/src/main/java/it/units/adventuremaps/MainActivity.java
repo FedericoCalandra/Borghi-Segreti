@@ -9,12 +9,18 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +45,23 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) {
             Intent firstIntent = new Intent(this, ActivityFirst.class);
             startActivity(firstIntent);
+        } else {
+            FirebaseDatabase database = FirebaseDatabase.getInstance("https://adventuremaps-1205-default-rtdb.europe-west1.firebasedatabase.app");
+
+            String uId = currentUser.getUid();
+            DatabaseReference ref = database.getReference("user_data").child(uId);
+
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (!snapshot.exists()) {
+                        ref.setValue("true");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
         }
     }
 
