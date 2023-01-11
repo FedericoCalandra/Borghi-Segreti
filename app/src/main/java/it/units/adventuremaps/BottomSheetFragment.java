@@ -1,13 +1,10 @@
 package it.units.adventuremaps;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -22,7 +19,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 
 public class BottomSheetFragment extends BottomSheetDialogFragment {
@@ -83,7 +79,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
                         }
                     }
                 }
-                mapsFragment.redrawExperienceMarker(marker);
+                mapsFragment.drawObjectiveExperienceMarker(experience);
             }
         });
         return view;
