@@ -24,20 +24,16 @@ import java.util.Map;
 public class BottomSheetFragment extends BottomSheetDialogFragment {
 
     private Experience experience;
-    private Marker marker;
-    private MapsActivityFragment mapsFragment;
-    private TextView title;
-    private TextView description;
+    private FirebaseDatabaseConnector databaseConnector;
     private Button setObjButton;
 
     public BottomSheetFragment() {
         // Required empty public constructor
     }
 
-    public BottomSheetFragment(Experience experience, Marker marker, MapsActivityFragment mapsFragment) {
+    public BottomSheetFragment(Experience experience, FirebaseDatabaseConnector databaseConnector) {
         this.experience = experience;
-        this.marker = marker;
-        this.mapsFragment = mapsFragment;
+        this.databaseConnector = databaseConnector;
     }
 
     @Override
@@ -51,8 +47,8 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottom_sheet_dialog_layout, container, false);
 
-        title = view.findViewById(R.id.experience_title);
-        description = view.findViewById(R.id.experience_description);
+        TextView title = view.findViewById(R.id.experience_title);
+        TextView description = view.findViewById(R.id.experience_description);
         setObjButton = view.findViewById(R.id.set_objective_button);
 
         title.setText(experience.getName());
@@ -65,42 +61,14 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 if (experience.getIsTheObjective()) {
-                    setObjectiveOnDatabase(null);
-                    experience.setIsTheObjective(false);
+                    databaseConnector.setObjectiveExperienceOfUser(null);
                     setObjButton.setText(R.string.setObjective_buttonText);
                 } else {
-                    setObjectiveOnDatabase(experience);
-                    experience.setIsTheObjective(true);
+                    databaseConnector.setObjectiveExperienceOfUser(experience);
                     setObjButton.setText(R.string.removeObjective_buttonText);
-
-                    for (Experience exp : mapsFragment.getExperiences()) {
-                        if (exp.getIsTheObjective()) {
-                            exp.setIsTheObjective(false);
-                        }
-                    }
                 }
-                mapsFragment.drawObjectiveExperienceMarker(experience);
             }
         });
         return view;
-    }
-
-    private void setObjectiveOnDatabase(Experience experience) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uId = "";
-        if (user != null) {
-            uId = user.getUid();
-        }
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://adventuremaps-1205-default-rtdb.europe-west1.firebasedatabase.app");
-        DatabaseReference dataRef = database.getReference().child("user_data").child(uId);
-        Map<String, String> value = new HashMap<>();
-
-        if (experience != null) {
-            value.put("objective", experience.getId());
-        } else {
-            value.put("objective", null);
-        }
-
-        dataRef.setValue(value);
     }
 }

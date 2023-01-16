@@ -4,5 +4,8 @@ import java.util.ArrayList;
 import java.util.EventListener;
 
 public interface DataEventListener extends EventListener {
-    void onExperienceDataAvailable(ArrayList<Experience> experiences);
+
+    void onDataAvailable(ArrayList<Experience> experiences);
+
+    void onStatusExperiencesChanged(ArrayList<Experience> changedExperiences);
 }

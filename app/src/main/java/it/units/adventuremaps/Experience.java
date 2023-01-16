@@ -46,6 +46,10 @@ public class Experience {
         return isTheObjective;
     }
 
+    public boolean getIsCompletedByUser() {
+        return isCompletedByUser;
+    }
+
     public void setIsTheObjective(boolean isTheObjective) {
         this.isTheObjective = isTheObjective;
     }

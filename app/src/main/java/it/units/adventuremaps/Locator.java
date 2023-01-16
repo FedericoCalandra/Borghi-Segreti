@@ -21,12 +21,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-import com.google.android.gms.maps.model.LatLng;
 
 
 public class Locator {
 
-    private MapsActivityFragment callingActivity;
+    private final MapsActivityFragment callingActivity;
     private FusedLocationProviderClient fusedLocationClient;
     private Location userLocation;
     private Experience objectiveExperience;
@@ -34,20 +33,16 @@ public class Locator {
     private OnObjectiveCompletedEventListener objectiveCompletedListener;
 
     public Locator(MapsActivityFragment activity, boolean testMode) {
+        this.callingActivity = activity;
         if (testMode) {
             Location overriddenUserLocation = new Location("");
             overriddenUserLocation.setLongitude(0);
             overriddenUserLocation.setLatitude(0);
             userLocation = overriddenUserLocation;
         } else {
-            this.callingActivity = activity;
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(callingActivity);
             getLastLocation();
         }
-    }
-
-    public void setObjectiveExperience(Experience experience) {
-        objectiveExperience = experience;
     }
 
     public void addOnUserLocationUpdateEventListener(OnUserLocationUpdateListener listener) {
@@ -59,6 +54,7 @@ public class Locator {
     }
 
     public boolean hasTheObjectiveBeenCompleted() {
+        objectiveExperience = callingActivity.getObjectiveExperience();
         double distanceBetweenPoints = 500;
         if (objectiveExperience != null) {
             distanceBetweenPoints = computeDistanceBetweenPoints(objectiveExperience.getCoordinates().latitude,

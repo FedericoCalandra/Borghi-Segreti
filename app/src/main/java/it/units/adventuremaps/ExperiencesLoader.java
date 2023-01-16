@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class ExperiencesLoader {
     private final String TAG = "FIREBASE_DATABASE";
-    private FirebaseUser user;
+    private final FirebaseUser user;
     private ArrayList<Experience> experiences;
     private DataEventListener listener;
 
@@ -74,7 +74,7 @@ public class ExperiencesLoader {
                         experience.setIsTheObjective(true);
                     }
                 }
-                listener.onExperienceDataAvailable(experiences);
+                listener.onDataAvailable(experiences);
             }
 
             @Override
