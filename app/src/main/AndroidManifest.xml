@@ -37,6 +37,11 @@
         </activity>
 
         <activity
+            android:name=".CompletedExperiencesActivity"
+            android:exported="false">
+        </activity>
+
+        <activity
             android:name=".UserProfileActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar">

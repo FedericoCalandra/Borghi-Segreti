@@ -40,6 +40,7 @@ public class FirebaseDatabaseConnector {
         loadExperiences();
         loadCompletedExperiences();
         loadObjectiveExperience();
+        completedExperiences = new ArrayList<>();
     }
 
     public void addDataEventListener(DataEventListener listener) {
@@ -103,10 +104,6 @@ public class FirebaseDatabaseConnector {
 
                     if (experiences != null) {
 
-                        if (completedExperiences == null) {
-                            completedExperiences = new ArrayList<>();
-                        }
-
                         completedExperiences.clear();
 
                         for (Experience experience : experiences) {
@@ -125,7 +122,7 @@ public class FirebaseDatabaseConnector {
 
                 if (dataAreAvailableToClient) {
                     listener.onStatusExperiencesChanged(completedExperiences);
-                } else {
+                } else if (!experienceRequestedFromCompletedExp) {
                     completedExperiencesLoaded = true;
                     callListener();
                 }
@@ -178,7 +175,7 @@ public class FirebaseDatabaseConnector {
                         twoElementList.add(oldObjectiveExperience);
                     }
                     listener.onStatusExperiencesChanged(twoElementList);
-                } else {
+                } else if (!experienceRequestedFromObjectiveExp) {
                     objectiveExperienceLoaded = true;
                     callListener();
                 }
@@ -206,7 +203,7 @@ public class FirebaseDatabaseConnector {
 
     public void setExperienceAsCompletedForUser(Experience completedExperience) {
         DatabaseReference completedRef = database.getReference().child("user_data").child(user.getUid()).child("completed_experiences");
-
+        Log.d(TAG, "setExperienceAsCompletedForUser: complExps = " + completedExperiences);
         if (completedExperiences != null) {
 
             completedExperiences.add(completedExperience);

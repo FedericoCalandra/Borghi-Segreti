@@ -24,6 +24,9 @@ public class MainActivityFragment extends Fragment {
         AppCompatImageButton experienceBtn = view.findViewById(R.id.experienceButton);
         experienceBtn.setOnClickListener(experienceBtnClickListener);
 
+        AppCompatImageButton achievementButton = view.findViewById(R.id.achievementButton);
+        achievementButton.setOnClickListener(achievementButtonClickListener);
+
         AppCompatImageButton userProfileBtn = view.findViewById(R.id.userButton);
         userProfileBtn.setOnClickListener(userBtnClickListener);
 
@@ -41,11 +44,19 @@ public class MainActivityFragment extends Fragment {
         }
     };
 
+    private final OnClickListener achievementButtonClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(getActivity(), CompletedExperiencesActivity.class);
+            startActivity(intent);
+        }
+    };
+
     private final OnClickListener userBtnClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent mapsIntent = new Intent(getActivity(), UserProfileActivity.class);
-            startActivity(mapsIntent);
+            Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+            startActivity(intent);
         }
     };
 

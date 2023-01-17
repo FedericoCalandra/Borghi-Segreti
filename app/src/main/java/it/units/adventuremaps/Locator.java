@@ -28,7 +28,6 @@ public class Locator {
     private final MapsActivityFragment callingActivity;
     private FusedLocationProviderClient fusedLocationClient;
     private Location userLocation;
-    private Experience objectiveExperience;
     private OnUserLocationUpdateListener locationUpdateListener;
     private OnObjectiveCompletedEventListener objectiveCompletedListener;
 
@@ -54,7 +53,7 @@ public class Locator {
     }
 
     public boolean hasTheObjectiveBeenCompleted() {
-        objectiveExperience = callingActivity.getObjectiveExperience();
+        Experience objectiveExperience = callingActivity.getObjectiveExperience();
         double distanceBetweenPoints = 500;
         if (objectiveExperience != null) {
             distanceBetweenPoints = computeDistanceBetweenPoints(objectiveExperience.getCoordinates().latitude,

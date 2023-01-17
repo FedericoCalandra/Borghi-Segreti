@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,6 +54,16 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
 
         title.setText(experience.getName());
         description.setText(experience.getDescription());
+        if (experience.getIsCompletedByUser()) {
+            setObjButton.setVisibility(View.INVISIBLE);
+            TextView completedText = new TextView(getActivity());
+            completedText.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT));
+            completedText.setText("COMPLETED!");
+            LinearLayout bottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
+            bottomSheetLayout.addView(completedText);
+        }
         if (experience.getIsTheObjective()) {
             setObjButton.setText(R.string.removeObjective_buttonText);
         }

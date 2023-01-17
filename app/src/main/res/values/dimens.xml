@@ -11,4 +11,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="experienceTitleSize">28sp</dimen>
     <dimen name="experienceDescriptionSize">18sp</dimen>
+    <dimen name="completed_exp_end_padding_inner_card">10dp</dimen>
+    <dimen name="completed_exp_title_text_size">20sp</dimen>
+    <dimen name="completed_exp_date_text_size">10sp</dimen>
 </resources>

@@ -60,6 +60,24 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
         isTestModeEnabled = sharedPreferences.getBoolean(getString(R.string.test_key), false);
         Log.d(TAG, "TestMode = " + isTestModeEnabled);
 
+
+        databaseConnector = new FirebaseDatabaseConnector(FirebaseAuth.getInstance().getCurrentUser());
+        databaseConnector.addDataEventListener(new DataEventListener() {
+            @Override
+            public void onDataAvailable(ArrayList<Experience> experiencesLoaded) {
+                experiences = experiencesLoaded;
+                drawAllMarkerExperiences();
+            }
+            @Override
+            public void onStatusExperiencesChanged(ArrayList<Experience> changedExperiences) {
+                if (allMarkersAreSet) {
+                    for (Experience experience : changedExperiences) {
+                        drawExperienceMarker(experience);
+                    }
+                }
+            }
+        });
+
         locator = new Locator(this, isTestModeEnabled);
         locator.addOnUserLocationUpdateEventListener(new OnUserLocationUpdateListener() {
             @Override
@@ -71,27 +89,8 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
             @Override
             public void onObjectiveCompleted() {
                 Log.d(TAG, "Objective completed!");
-            }
-        });
-
-
-        databaseConnector = new FirebaseDatabaseConnector(FirebaseAuth.getInstance().getCurrentUser());
-
-        databaseConnector.addDataEventListener(new DataEventListener() {
-            @Override
-            public void onDataAvailable(ArrayList<Experience> experiencesLoaded) {
-                experiences = experiencesLoaded;
-                drawAllMarkerExperiences();
-            }
-
-            @Override
-            public void onStatusExperiencesChanged(ArrayList<Experience> changedExperiences) {
-                if (allMarkersAreSet) {
-                    for (Experience experience : changedExperiences) {
-                        drawExperienceMarker(experience);
-                        Log.d(TAG, "onStatusExperiencesChanged: " + experience.getName() + experience.getIsTheObjective());;
-                    }
-                }
+                databaseConnector.setExperienceAsCompletedForUser(objectiveExperience);
+                databaseConnector.setObjectiveExperienceOfUser(null);
             }
         });
     }
