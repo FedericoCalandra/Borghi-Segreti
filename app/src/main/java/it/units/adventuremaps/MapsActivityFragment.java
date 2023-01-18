@@ -2,6 +2,7 @@ package it.units.adventuremaps;
 
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -77,6 +78,11 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         locator = new Locator(this, isTestModeEnabled);
         locator.addOnUserLocationUpdateEventListener(new OnUserLocationUpdateListener() {
@@ -213,6 +219,9 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
         if (requestCode == PERMISSION_ID) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 locator.permissionGranted();
+            } else {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
             }
         }
     }

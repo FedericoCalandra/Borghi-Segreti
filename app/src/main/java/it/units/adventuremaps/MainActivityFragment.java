@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -21,11 +22,11 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        AppCompatImageButton experienceBtn = view.findViewById(R.id.experienceButton);
-        experienceBtn.setOnClickListener(experienceBtnClickListener);
+        CardView mapsBtn = view.findViewById(R.id.map_button);
+        mapsBtn.setOnClickListener(mapBtnClickListener);
 
-        AppCompatImageButton achievementButton = view.findViewById(R.id.achievementButton);
-        achievementButton.setOnClickListener(achievementButtonClickListener);
+        CardView achievementButton = view.findViewById(R.id.completed_exp_button);
+        achievementButton.setOnClickListener(completedExperienceBtnClickListener);
 
         AppCompatImageButton userProfileBtn = view.findViewById(R.id.userButton);
         userProfileBtn.setOnClickListener(userBtnClickListener);
@@ -36,7 +37,7 @@ public class MainActivityFragment extends Fragment {
         return view;
     }
 
-    private final OnClickListener experienceBtnClickListener = new OnClickListener() {
+    private final OnClickListener mapBtnClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent mapsIntent = new Intent(getActivity(), MapsActivityFragment.class);
@@ -44,7 +45,7 @@ public class MainActivityFragment extends Fragment {
         }
     };
 
-    private final OnClickListener achievementButtonClickListener = new OnClickListener() {
+    private final OnClickListener completedExperienceBtnClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(getActivity(), CompletedExperiencesActivity.class);
