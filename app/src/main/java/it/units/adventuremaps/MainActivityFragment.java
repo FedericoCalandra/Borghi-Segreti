@@ -9,18 +9,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+
 public class MainActivityFragment extends Fragment {
+
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        getCurrentObjective();
 
         CardView mapsBtn = view.findViewById(R.id.map_button);
         mapsBtn.setOnClickListener(mapBtnClickListener);
@@ -28,13 +37,59 @@ public class MainActivityFragment extends Fragment {
         CardView achievementButton = view.findViewById(R.id.completed_exp_button);
         achievementButton.setOnClickListener(completedExperienceBtnClickListener);
 
-        AppCompatImageButton userProfileBtn = view.findViewById(R.id.userButton);
+        CardView userProfileBtn = view.findViewById(R.id.user_button);
         userProfileBtn.setOnClickListener(userBtnClickListener);
 
-        AppCompatImageButton logOutBtn = view.findViewById(R.id.logOutButton);
+        CardView logOutBtn = view.findViewById(R.id.logout_button);
         logOutBtn.setOnClickListener(logOutBtnClickListener);
 
         return view;
+    }
+
+    private void getCurrentObjective() {
+        FirebaseDatabaseConnector databaseConnector = new FirebaseDatabaseConnector(FirebaseAuth.getInstance().getCurrentUser());
+        databaseConnector.addDataEventListener(new DataEventListener() {
+            @Override
+            public void onDataAvailable(ArrayList<Experience> experiences) {
+                findObjective(experiences);
+            }
+
+            @Override
+            public void onStatusExperiencesChanged(ArrayList<Experience> changedExperiences) {
+                findObjective(changedExperiences);
+            }
+        });
+    }
+
+    private void findObjective(ArrayList<Experience> experiences) {
+        for (Experience experience : experiences) {
+            if (experience.getIsTheObjective()) {
+                drawObjectiveView(experience);
+                return;
+            }
+        }
+        drawNoObjectiveView();
+    }
+
+    private void drawNoObjectiveView() {
+        View noObjectiveLayout = view.findViewById(R.id.no_objective_view);
+        noObjectiveLayout.setVisibility(View.VISIBLE);
+        View objectiveLayout = view.findViewById(R.id.objective_view);
+        objectiveLayout.setVisibility(View.GONE);
+    }
+
+    private void drawObjectiveView(Experience objective) {
+        View objectiveLayout = view.findViewById(R.id.objective_view);
+        objectiveLayout.setVisibility(View.VISIBLE);
+        View noObjectiveLayout = view.findViewById(R.id.no_objective_view);
+        noObjectiveLayout.setVisibility(View.GONE);
+
+
+        TextView experienceTitle = view.findViewById(R.id.experience_title_main_fragment);
+        TextView experienceDescription = view.findViewById(R.id.experience_description_main_fragment);
+
+        experienceTitle.setText(objective.getName());
+        experienceDescription.setText(objective.getDescription());
     }
 
     private final OnClickListener mapBtnClickListener = new OnClickListener() {
