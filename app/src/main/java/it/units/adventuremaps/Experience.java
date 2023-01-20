@@ -9,15 +9,17 @@ public class Experience {
     private String description;
     private ExperienceType type;
     private LatLng coordinates;
+    private int points;
     private boolean isTheObjective;
     private boolean isCompletedByUser;
 
-    public Experience(String id, String name, String description, ExperienceType type, LatLng coordinates) {
+    public Experience(String id, String name, String description, ExperienceType type, LatLng coordinates, int points) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
         this.coordinates = coordinates;
+        this.points = points;
         this.isTheObjective = false;
         this.isCompletedByUser = false;
     }
@@ -40,6 +42,10 @@ public class Experience {
 
     public LatLng getCoordinates() {
         return coordinates;
+    }
+
+    public int getPoints() {
+        return points;
     }
 
     public boolean getIsTheObjective() {

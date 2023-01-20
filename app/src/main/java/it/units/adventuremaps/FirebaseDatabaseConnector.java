@@ -1,6 +1,7 @@
 package it.units.adventuremaps;
 
 
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -34,12 +35,14 @@ public class FirebaseDatabaseConnector {
     private ArrayList<Experience> experiences;
     private ArrayList<Experience> completedExperiences;
     private Experience objectiveExperience;
+    private int userPoints;
 
     public FirebaseDatabaseConnector(FirebaseUser currentUser) {
         this.user = currentUser;
         loadExperiences();
         loadCompletedExperiences();
         loadObjectiveExperience();
+        loadUserPoints();
         completedExperiences = new ArrayList<>();
     }
 
@@ -63,10 +66,15 @@ public class FirebaseDatabaseConnector {
                     ExperienceType type = dataExperience.child("type").getValue(ExperienceType.class);
                     Double latitude = dataExperience.child("coordinates").child("latitude").getValue(Double.class);
                     Double longitude = dataExperience.child("coordinates").child("longitude").getValue(Double.class);
+                    Integer points = dataExperience.child("points").getValue(Integer.class);
 
                     LatLng coordinates = new LatLng(latitude, longitude);
 
-                    experiences.add(new Experience(id, name, description, type, coordinates));
+                    if (points == null) {
+                        points = 0;
+                    }
+
+                    experiences.add(new Experience(id, name, description, type, coordinates, points));
                 }
 
                 callListener();
@@ -189,6 +197,28 @@ public class FirebaseDatabaseConnector {
         });
     }
 
+    private void loadUserPoints() {
+        DatabaseReference pointsRef = database.getReference().child("user_data").child(user.getUid()).child("points");
+
+        pointsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Integer points = snapshot.getValue(Integer.class);
+                if (points != null) {
+                    userPoints = points;
+                } else {
+                    userPoints = 0;
+                }
+                listener.onPointsUpdated(userPoints);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     public void setObjectiveExperienceOfUser(Experience experience) {
         if (objectiveExperience != null) {
             objectiveExperience.setIsTheObjective(false);
@@ -214,6 +244,9 @@ public class FirebaseDatabaseConnector {
             }
 
             completedRef.setValue(valuesOfCompletedExperiences);
+
+            DatabaseReference pointsRef = database.getReference().child("user_data").child(user.getUid()).child("points");
+            pointsRef.setValue(userPoints + completedExperience.getPoints());
         }
     }
 

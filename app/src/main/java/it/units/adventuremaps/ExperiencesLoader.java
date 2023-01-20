@@ -45,10 +45,15 @@ public class ExperiencesLoader {
                     ExperienceType type = dataExperience.child("type").getValue(ExperienceType.class);
                     Double latitude = dataExperience.child("coordinates").child("latitude").getValue(Double.class);
                     Double longitude = dataExperience.child("coordinates").child("longitude").getValue(Double.class);
+                    Integer points = dataExperience.child("points").getValue(Integer.class);
 
                     LatLng coordinates = new LatLng(latitude, longitude);
 
-                    experiences.add(new Experience(id, name, description, type, coordinates));
+                    if (points == null) {
+                        points = 0;
+                    }
+
+                    experiences.add(new Experience(id, name, description, type, coordinates, points));
                 }
                 loadAndSetObjectiveExperienceFromDatabase();
             }

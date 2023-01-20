@@ -77,6 +77,8 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
                     }
                 }
             }
+            @Override
+            public void onPointsUpdated(int points) {}
         });
     }
 

@@ -29,7 +29,7 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        getCurrentObjective();
+        getCurrentObjectiveAndSetUserPoints();
 
         CardView mapsBtn = view.findViewById(R.id.map_button);
         mapsBtn.setOnClickListener(mapBtnClickListener);
@@ -46,7 +46,12 @@ public class MainActivityFragment extends Fragment {
         return view;
     }
 
-    private void getCurrentObjective() {
+    private void drawUserPoints(int points) {
+        TextView pointsView = view.findViewById(R.id.points);
+        pointsView.setText(String.valueOf(points));
+    }
+
+    private void getCurrentObjectiveAndSetUserPoints() {
         FirebaseDatabaseConnector databaseConnector = new FirebaseDatabaseConnector(FirebaseAuth.getInstance().getCurrentUser());
         databaseConnector.addDataEventListener(new DataEventListener() {
             @Override
@@ -57,6 +62,11 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onStatusExperiencesChanged(ArrayList<Experience> changedExperiences) {
                 findObjective(changedExperiences);
+            }
+
+            @Override
+            public void onPointsUpdated(int points) {
+                drawUserPoints(points);
             }
         });
     }

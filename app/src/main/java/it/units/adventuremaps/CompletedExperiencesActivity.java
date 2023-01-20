@@ -37,6 +37,9 @@ public class CompletedExperiencesActivity extends AppCompatActivity {
 
             @Override
             public void onStatusExperiencesChanged(ArrayList<Experience> changedExperiences) {}
+
+            @Override
+            public void onPointsUpdated(int points) {}
         });
 
     }
