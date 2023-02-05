@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,28 +11,24 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
-import java.util.Map;
+import it.units.adventuremaps.interfaces.DatabaseConnector;
+import it.units.adventuremaps.models.Experience;
+import it.units.adventuremaps.R;
 
 
 public class BottomSheetFragment extends BottomSheetDialogFragment {
 
     private Experience experience;
-    private FirebaseDatabaseConnector databaseConnector;
+    private DatabaseConnector databaseConnector;
     private Button setObjButton;
 
     public BottomSheetFragment() {
         // Required empty public constructor
     }
 
-    public BottomSheetFragment(Experience experience, FirebaseDatabaseConnector databaseConnector) {
+    public BottomSheetFragment(Experience experience, DatabaseConnector databaseConnector) {
         this.experience = experience;
         this.databaseConnector = databaseConnector;
     }

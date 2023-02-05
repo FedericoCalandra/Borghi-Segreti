@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.activities;
 
 
 import android.content.Intent;

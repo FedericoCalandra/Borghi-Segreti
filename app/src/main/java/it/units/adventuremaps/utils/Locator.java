@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.utils;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -21,6 +21,13 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+
+import it.units.adventuremaps.R;
+import it.units.adventuremaps.activities.MainActivity;
+import it.units.adventuremaps.fragments.MapsActivityFragment;
+import it.units.adventuremaps.interfaces.OnObjectiveCompletedEventListener;
+import it.units.adventuremaps.interfaces.OnUserLocationUpdateListener;
+import it.units.adventuremaps.models.Experience;
 
 
 public class Locator {

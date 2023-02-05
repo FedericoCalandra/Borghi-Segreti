@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.interfaces;
 
 import android.location.Location;
 

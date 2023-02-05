@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.activities;
 
 import android.os.Bundle;
 import android.widget.TextView;
@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
+
+import it.units.adventuremaps.R;
 
 public class UserProfileActivity extends AppCompatActivity {
 

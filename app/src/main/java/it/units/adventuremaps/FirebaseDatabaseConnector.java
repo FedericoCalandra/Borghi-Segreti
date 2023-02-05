@@ -1,7 +1,6 @@
 package it.units.adventuremaps;
 
 
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -18,8 +17,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import it.units.adventuremaps.interfaces.DataEventListener;
+import it.units.adventuremaps.interfaces.DatabaseConnector;
+import it.units.adventuremaps.models.Experience;
+import it.units.adventuremaps.models.Zone;
+import it.units.adventuremaps.utils.ExperienceType;
 
-public class FirebaseDatabaseConnector {
+
+public class FirebaseDatabaseConnector implements DatabaseConnector {
 
     private static final String TAG = "FIREBASE_DB_CONNECTOR";
     private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://adventuremaps-1205-default-rtdb.europe-west1.firebasedatabase.app");
@@ -33,7 +38,7 @@ public class FirebaseDatabaseConnector {
 
 
     private ArrayList<Experience> experiences;
-    private ArrayList<Experience> completedExperiences;
+    private final ArrayList<Experience> completedExperiences;
     private Experience objectiveExperience;
     private int userPoints;
 
@@ -46,11 +51,45 @@ public class FirebaseDatabaseConnector {
         completedExperiences = new ArrayList<>();
     }
 
+    @Override
     public void addDataEventListener(DataEventListener listener) {
         this.listener = listener;
     }
 
-    public void loadExperiences() {
+    @Override
+    public void setObjectiveExperienceOfUser(Experience experience) {
+        if (objectiveExperience != null) {
+            objectiveExperience.setIsTheObjective(false);
+        }
+        DatabaseReference objectiveRef = database.getReference().child("user_data").child(user.getUid()).child("objective");
+        if (experience != null) {
+            objectiveRef.setValue(experience.getId());
+        } else {
+            objectiveRef.setValue(null);
+        }
+    }
+
+    @Override
+    public void setExperienceAsCompletedForUser(Experience completedExperience) {
+        DatabaseReference completedRef = database.getReference().child("user_data").child(user.getUid()).child("completed_experiences");
+        Log.d(TAG, "setExperienceAsCompletedForUser: complExps = " + completedExperiences);
+        if (completedExperiences != null) {
+
+            completedExperiences.add(completedExperience);
+
+            Map<String, String> valuesOfCompletedExperiences = new HashMap<>();
+            for (Experience experience : completedExperiences) {
+                valuesOfCompletedExperiences.put(experience.getId(), "true");
+            }
+
+            completedRef.setValue(valuesOfCompletedExperiences);
+
+            DatabaseReference pointsRef = database.getReference().child("user_data").child(user.getUid()).child("points");
+            pointsRef.setValue(userPoints + completedExperience.getPoints());
+        }
+    }
+
+    private void loadExperiences() {
         DatabaseReference experiencesRef = database.getReference().child("experiences");
 
         experiencesRef.addValueEventListener(new ValueEventListener() {
@@ -96,11 +135,11 @@ public class FirebaseDatabaseConnector {
         });
     }
 
-    public void loadExperiences(Zone zone) {
+    private void loadExperiences(Zone zone) {
 
     }
 
-    public void loadCompletedExperiences() {
+    private void loadCompletedExperiences() {
         DatabaseReference userRef = database.getReference().child("user_data").child(user.getUid())
                 .child("completed_experiences");
 
@@ -143,7 +182,7 @@ public class FirebaseDatabaseConnector {
         });
     }
 
-    public void loadObjectiveExperience() {
+    private void loadObjectiveExperience() {
         DatabaseReference userRef = database.getReference().child("user_data").child(user.getUid());
 
         userRef.addValueEventListener(new ValueEventListener() {
@@ -219,41 +258,11 @@ public class FirebaseDatabaseConnector {
         });
     }
 
-    public void setObjectiveExperienceOfUser(Experience experience) {
-        if (objectiveExperience != null) {
-            objectiveExperience.setIsTheObjective(false);
-        }
-        DatabaseReference objectiveRef = database.getReference().child("user_data").child(user.getUid()).child("objective");
-        if (experience != null) {
-            objectiveRef.setValue(experience.getId());
-        } else {
-            objectiveRef.setValue(null);
-        }
-    }
-
-    public void setExperienceAsCompletedForUser(Experience completedExperience) {
-        DatabaseReference completedRef = database.getReference().child("user_data").child(user.getUid()).child("completed_experiences");
-        Log.d(TAG, "setExperienceAsCompletedForUser: complExps = " + completedExperiences);
-        if (completedExperiences != null) {
-
-            completedExperiences.add(completedExperience);
-
-            Map<String, String> valuesOfCompletedExperiences = new HashMap<>();
-            for (Experience experience : completedExperiences) {
-                valuesOfCompletedExperiences.put(experience.getId(), "true");
-            }
-
-            completedRef.setValue(valuesOfCompletedExperiences);
-
-            DatabaseReference pointsRef = database.getReference().child("user_data").child(user.getUid()).child("points");
-            pointsRef.setValue(userPoints + completedExperience.getPoints());
-        }
-    }
-
     private void callListener() {
         if (listener != null && experiences != null && completedExperiencesLoaded && objectiveExperienceLoaded) {
             listener.onDataAvailable(experiences);
             dataAreAvailableToClient = true;
         }
     }
+
 }

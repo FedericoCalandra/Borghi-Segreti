@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,14 +11,21 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.widget.AppCompatImageButton;
+
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
+
+import it.units.adventuremaps.interfaces.DataEventListener;
+import it.units.adventuremaps.interfaces.DatabaseConnector;
+import it.units.adventuremaps.models.Experience;
+import it.units.adventuremaps.FirebaseDatabaseConnector;
+import it.units.adventuremaps.R;
+import it.units.adventuremaps.activities.UserProfileActivity;
+import it.units.adventuremaps.activities.ActivityFirst;
+import it.units.adventuremaps.activities.CompletedExperiencesActivity;
 
 public class MainActivityFragment extends Fragment {
 
@@ -52,7 +59,7 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void getCurrentObjectiveAndSetUserPoints() {
-        FirebaseDatabaseConnector databaseConnector = new FirebaseDatabaseConnector(FirebaseAuth.getInstance().getCurrentUser());
+        DatabaseConnector databaseConnector = new FirebaseDatabaseConnector(FirebaseAuth.getInstance().getCurrentUser());
         databaseConnector.addDataEventListener(new DataEventListener() {
             @Override
             public void onDataAvailable(ArrayList<Experience> experiences) {

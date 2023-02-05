@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.models;
 
 
 import com.google.android.gms.maps.model.LatLng;

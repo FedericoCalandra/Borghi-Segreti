@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.activities;
 
 
 import android.content.Intent;
@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import it.units.adventuremaps.R;
 
 
 public class MainActivity extends AppCompatActivity {

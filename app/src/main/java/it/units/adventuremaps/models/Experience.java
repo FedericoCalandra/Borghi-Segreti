@@ -1,7 +1,9 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.models;
 
 
 import com.google.android.gms.maps.model.LatLng;
+
+import it.units.adventuremaps.utils.ExperienceType;
 
 public class Experience {
     private String id;

@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.interfaces;
 
 import java.util.EventListener;
 

@@ -1,9 +1,11 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.activities;
 
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import it.units.adventuremaps.R;
 
 public class MapsActivity extends AppCompatActivity {
     @Override

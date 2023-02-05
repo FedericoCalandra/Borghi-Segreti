@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.activities;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+
+import it.units.adventuremaps.interfaces.DataEventListener;
+import it.units.adventuremaps.models.Experience;
+import it.units.adventuremaps.FirebaseDatabaseConnector;
+import it.units.adventuremaps.R;
 
 
 public class CompletedExperiencesActivity extends AppCompatActivity {

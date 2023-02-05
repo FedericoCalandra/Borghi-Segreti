@@ -1,8 +1,10 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.fragments;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceFragmentCompat;
+
+import it.units.adventuremaps.R;
 
 public class SettingsActivityFragment extends PreferenceFragmentCompat {
 

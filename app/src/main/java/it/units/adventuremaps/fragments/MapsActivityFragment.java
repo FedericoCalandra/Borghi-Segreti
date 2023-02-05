@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.fragments;
 
 
 import android.Manifest;
@@ -31,6 +31,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
+import it.units.adventuremaps.interfaces.DataEventListener;
+import it.units.adventuremaps.interfaces.DatabaseConnector;
+import it.units.adventuremaps.models.Experience;
+import it.units.adventuremaps.FirebaseDatabaseConnector;
+import it.units.adventuremaps.utils.Locator;
+import it.units.adventuremaps.interfaces.OnObjectiveCompletedEventListener;
+import it.units.adventuremaps.interfaces.OnUserLocationUpdateListener;
+import it.units.adventuremaps.R;
+import it.units.adventuremaps.activities.MainActivity;
+
 
 public class MapsActivityFragment extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnMapLongClickListener {
@@ -45,7 +55,7 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
     private Map<Marker, Experience> markerExperienceMap;
     private boolean allMarkersAreSet = false;
     private Locator locator;
-    private FirebaseDatabaseConnector databaseConnector;
+    private DatabaseConnector databaseConnector;
     private Experience objectiveExperience;
 
     @Override
@@ -207,7 +217,7 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
         }
     }
 
-    protected void requestLocalizationPermissions() {
+    public void requestLocalizationPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
@@ -228,7 +238,7 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
         }
     }
 
-    protected Experience getObjectiveExperience() {
+    public Experience getObjectiveExperience() {
         return objectiveExperience;
     }
 }

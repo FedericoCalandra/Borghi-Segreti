@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.utils;
 
 public enum ExperienceType {
     PANORAMIC_VIEW,

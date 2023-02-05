@@ -1,4 +1,4 @@
-package it.units.adventuremaps;
+package it.units.adventuremaps.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import it.units.adventuremaps.R;
 
 public class ActivityFirst extends AppCompatActivity {
     @Override
