@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Intent firstIntent = new Intent(this, ActivityFirst.class);
+            Intent firstIntent = new Intent(this, InitialActivity.class);
             startActivity(firstIntent);
         } else {
             FirebaseDatabase database = FirebaseDatabase.getInstance("https://adventuremaps-1205-default-rtdb.europe-west1.firebasedatabase.app");
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Intent firstIntent = new Intent(this, ActivityFirst.class);
+            Intent firstIntent = new Intent(this, InitialActivity.class);
             startActivity(firstIntent);
         }
     }

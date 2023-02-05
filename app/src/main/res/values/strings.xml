@@ -16,4 +16,5 @@
     <string name="test_key">test_mode</string>
     <string name="setObjective_buttonText">set as objective</string>
     <string name="removeObjective_buttonText">remove as objective</string>
+    <string name="application_logo_description">Application Logo</string>
 </resources>

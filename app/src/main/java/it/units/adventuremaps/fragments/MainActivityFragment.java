@@ -24,7 +24,7 @@ import it.units.adventuremaps.models.Experience;
 import it.units.adventuremaps.FirebaseDatabaseConnector;
 import it.units.adventuremaps.R;
 import it.units.adventuremaps.activities.UserProfileActivity;
-import it.units.adventuremaps.activities.ActivityFirst;
+import it.units.adventuremaps.activities.InitialActivity;
 import it.units.adventuremaps.activities.CompletedExperiencesActivity;
 
 public class MainActivityFragment extends Fragment {
@@ -146,7 +146,7 @@ public class MainActivityFragment extends Fragment {
                     FirebaseAuth auth = FirebaseAuth.getInstance();
                     auth.signOut();
                     Toast.makeText(getActivity(), "User signed out", Toast.LENGTH_SHORT).show();
-                    Intent firstIntent = new Intent(getActivity(), ActivityFirst.class);
+                    Intent firstIntent = new Intent(getActivity(), InitialActivity.class);
                     Handler handler = new Handler();
                     handler.postDelayed(
                             new Runnable() {

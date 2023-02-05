@@ -6,32 +6,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".activities.ActivityFirst">
+    tools:context=".activities.InitialActivity">
 
     <ImageView
         android:id="@+id/logo_image"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="@dimen/first_logo_height"
         android:layout_marginTop="@dimen/first_logo_top_margin"
         android:cropToPadding="false"
-        android:paddingTop="20dp"
-        android:paddingBottom="50dp"
-        app:srcCompat="@drawable/fui_ic_googleg_color_24dp" />
+        android:paddingTop="@dimen/first_logo_top_padding"
+        android:paddingBottom="@dimen/first_logo_bottom_padding"
+        app:srcCompat="@drawable/fui_ic_googleg_color_24dp"
+        android:contentDescription="@string/application_logo_description" />
 
     <Button
         android:id="@+id/logInButton"
-        android:layout_width="200dp"
+        android:layout_width="@dimen/first_button_width"
         android:layout_height="wrap_content"
         android:elevation="@dimen/buttons_elevation"
         android:text="@string/log_in_button_text"
-        android:textColor="@color/blue" />
-
-    <Button
-        android:id="@+id/signInButton"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/sign_in_top_margin"
-        android:text="@string/sign_in_button_text"
-        android:textColor="@color/blue" />
+        android:textColor="@color/blue"
+        android:layout_marginTop="@dimen/first_button_top_margin"/>
 
 </LinearLayout>

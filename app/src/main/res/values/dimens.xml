@@ -5,7 +5,7 @@
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="main_fragment_height">500dp</dimen>
     <dimen name="main_view_top_margin">8dp</dimen>
-    <dimen name="first_logo_top_margin">20dp</dimen>
+    <dimen name="first_logo_top_margin">50dp</dimen>
     <dimen name="sign_in_top_margin">4dp</dimen>
     <dimen name="activity_horizontal_margin">8dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -14,4 +14,9 @@
     <dimen name="completed_exp_end_padding_inner_card">10dp</dimen>
     <dimen name="completed_exp_title_text_size">20sp</dimen>
     <dimen name="completed_exp_date_text_size">10sp</dimen>
+    <dimen name="first_button_top_margin">100dp</dimen>
+    <dimen name="first_button_width">200dp</dimen>
+    <dimen name="first_logo_top_padding">20dp</dimen>
+    <dimen name="first_logo_bottom_padding">50dp</dimen>
+    <dimen name="first_logo_height">200dp</dimen>
 </resources>

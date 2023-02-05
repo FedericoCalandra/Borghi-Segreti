@@ -54,7 +54,7 @@
         </activity>
 
         <activity
-            android:name=".activities.ActivityFirst"
+            android:name=".activities.InitialActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
