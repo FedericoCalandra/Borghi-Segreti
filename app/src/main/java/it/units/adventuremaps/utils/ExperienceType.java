@@ -2,5 +2,10 @@ package it.units.adventuremaps.utils;
 
 public enum ExperienceType {
     PANORAMIC_VIEW,
-    HISTORICAL_BUILDING
+    RESTAURANT,
+    TYPICAL_FOOD,
+    RIVER_WATERFALL,
+    NATURALISTIC_AREA,
+    MOUNTAIN,
+    POINT_OF_HISTORICAL_INTEREST
 }

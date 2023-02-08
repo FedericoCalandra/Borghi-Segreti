@@ -17,9 +17,9 @@
             android:layout_height="wrap_content"
             android:background="@color/rajah"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:subtitle="Scegli la tua prossima esperienza"
+            app:subtitle="@string/map_choose_experience"
             app:subtitleTextColor="@color/white"
-            app:title="Mappa"
+            app:title="@string/map_title"
             app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
             app:titleTextColor="@color/white" />
 
