@@ -215,7 +215,7 @@
             app:cardCornerRadius="8dp"
             android:layout_marginBottom="10dp"
             android:focusable="true"
-            android:backgroundTint="@color/teal_700" >
+            android:backgroundTint="@color/pacific_blue" >
 
             <TextView
                 android:layout_width="wrap_content"
