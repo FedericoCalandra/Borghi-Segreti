@@ -25,18 +25,19 @@ import com.google.android.gms.location.Priority;
 import it.units.adventuremaps.R;
 import it.units.adventuremaps.activities.MainActivity;
 import it.units.adventuremaps.fragments.MapsActivityFragment;
-import it.units.adventuremaps.interfaces.OnObjectiveCompletedEventListener;
+import it.units.adventuremaps.interfaces.OnObjectiveInRangeEventListener;
 import it.units.adventuremaps.interfaces.OnUserLocationUpdateListener;
 import it.units.adventuremaps.models.Experience;
 
 
 public class Locator {
 
+    private static final int RANGE = 50;
     private final MapsActivityFragment callingActivity;
     private FusedLocationProviderClient fusedLocationClient;
     private Location userLocation;
     private OnUserLocationUpdateListener locationUpdateListener;
-    private OnObjectiveCompletedEventListener objectiveCompletedListener;
+    private OnObjectiveInRangeEventListener objectiveInRangeListener;
 
     public Locator(MapsActivityFragment activity, boolean testMode) {
         this.callingActivity = activity;
@@ -55,11 +56,11 @@ public class Locator {
         this.locationUpdateListener = listener;
     }
 
-    public void addOnObjectiveCompletedEventListener(OnObjectiveCompletedEventListener listener) {
-        this.objectiveCompletedListener = listener;
+    public void addOnObjectiveInRangeEventListener(OnObjectiveInRangeEventListener listener) {
+        this.objectiveInRangeListener = listener;
     }
 
-    public boolean hasTheObjectiveBeenCompleted() {
+    public boolean isTheDistanceBetweenUserAndObjectiveLessThan50Meters() {
         Experience objectiveExperience = callingActivity.getObjectiveExperience();
         double distanceBetweenPoints = 500;
         if (objectiveExperience != null) {
@@ -67,29 +68,22 @@ public class Locator {
                     objectiveExperience.getCoordinates().longitude, userLocation.getLatitude(), userLocation.getLongitude());
         }
         Log.d("AM_LOCATION", "distance from obj = " + distanceBetweenPoints);
-        return distanceBetweenPoints < 50;
+        return distanceBetweenPoints < RANGE;
     }
 
-    public void overrideUserLocation(Location overriddenUserLocation) {
-        userLocation = overriddenUserLocation;
+    public void updateUserLocation(Location updatedUserLocation) {
+        userLocation = updatedUserLocation;
         if (locationUpdateListener != null) {
             locationUpdateListener.onUserLocationUpdate(userLocation);
         }
-        if (hasTheObjectiveBeenCompleted() && objectiveCompletedListener != null) {
-            objectiveCompletedListener.onObjectiveCompleted();
+        if (objectiveInRangeListener != null) {
+            if (isTheDistanceBetweenUserAndObjectiveLessThan50Meters()) {
+                objectiveInRangeListener.onObjectiveInRange();
+            } else {
+                objectiveInRangeListener.onObjectiveOutOfRange();
+            }
         }
     }
-
-    private void updateUserLocation(Location userLocation) {
-        this.userLocation = userLocation;
-        if (locationUpdateListener != null) {
-            locationUpdateListener.onUserLocationUpdate(userLocation);
-        }
-        if (hasTheObjectiveBeenCompleted() && objectiveCompletedListener != null) {
-            objectiveCompletedListener.onObjectiveCompleted();
-        }
-    }
-
 
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
@@ -169,24 +163,18 @@ public class Locator {
 
     private double computeDistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2) {
         double theta = lon1 - lon2;
-        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+        double dist = Math.sin(degreeToRadians(lat1)) * Math.sin(degreeToRadians(lat2)) + Math.cos(degreeToRadians(lat1)) * Math.cos(degreeToRadians(lat2)) * Math.cos(degreeToRadians(theta));
         dist = Math.acos(dist);
-        dist = rad2deg(dist);
+        dist = radiansToDegree(dist);
         dist = dist * 60 * 1.1515 * 1609.344;
         return (dist);
     }
 
-    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
-    /*::  This function converts decimal degrees to radians             :*/
-    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
-    private double deg2rad(double deg) {
+    private double degreeToRadians(double deg) {
         return (deg * Math.PI / 180.0);
     }
 
-    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
-    /*::  This function converts radians to decimal degrees             :*/
-    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
-    private double rad2deg(double rad) {
+    private double radiansToDegree(double rad) {
         return (rad * 180.0 / Math.PI);
     }
 

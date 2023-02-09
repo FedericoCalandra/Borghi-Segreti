@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="corn">#C7E1FF</color>
-    <color name="big_dig_oruby">#95A8FF</color>
-    <color name="rajah">#091440</color>
-    <color name="dark_cornflower_blue">#526A3F</color>
-    <color name="pacific_blue">#DBFFCD</color>
+    <color name="cyan">#AADDF6</color>
+    <color name="darker_cyan">#95D5F5</color>
+    <color name="light_aquamarine">#ADEBDE</color>
+    <color name="pale_turquoise">#92D0D4</color>
+    <color name="light_green">#AAF6BA</color>
+    <color name="pale_green">#DBFFCD</color>
+    <color name="yellow">#FFF315</color>
     <color name="blue">#0C1B57</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

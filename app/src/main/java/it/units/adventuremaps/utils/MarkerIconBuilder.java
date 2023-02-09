@@ -42,7 +42,18 @@ public class MarkerIconBuilder {
                 descriptor = BitmapDescriptorFactory.defaultMarker();
         }
 
+        if (experience.getIsTheObjective()) {
+            descriptor = BitmapDescriptorFactory.fromAsset("icons/star.png");
+        }
+
         return descriptor;
+    }
+
+    public float getAlpha() {
+        if (experience.getIsCompletedByUser()) {
+            return 0.5f;
+        }
+        return 1f;
     }
 
 }

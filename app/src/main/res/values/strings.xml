@@ -19,4 +19,10 @@
     <string name="application_logo_description">Application Logo</string>
     <string name="map_choose_experience">Choose your next experience</string>
     <string name="map_title">Map</string>
+    <string name="zero_point">0</string>
+    <string name="points">points</string>
+    <string name="no_objective">You don\'t have an objective.</string>
+    <string name="open_map">Open the map to see the eligible experiences.</string>
+    <string name="actual_objective">Your actual objective</string>
+    <string name="complete_experience">Complete the experience</string>
 </resources>

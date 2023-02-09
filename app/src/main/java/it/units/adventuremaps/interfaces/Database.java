@@ -2,7 +2,7 @@ package it.units.adventuremaps.interfaces;
 
 import it.units.adventuremaps.models.Experience;
 
-public interface DatabaseConnector {
+public interface Database {
 
     void addDataEventListener(DataEventListener listener);
 

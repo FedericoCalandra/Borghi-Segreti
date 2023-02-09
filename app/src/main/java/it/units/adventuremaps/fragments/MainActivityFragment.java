@@ -19,9 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 
 import it.units.adventuremaps.interfaces.DataEventListener;
-import it.units.adventuremaps.interfaces.DatabaseConnector;
+import it.units.adventuremaps.interfaces.Database;
 import it.units.adventuremaps.models.Experience;
-import it.units.adventuremaps.FirebaseDatabaseConnector;
+import it.units.adventuremaps.FirebaseDatabase;
 import it.units.adventuremaps.R;
 import it.units.adventuremaps.activities.UserProfileActivity;
 import it.units.adventuremaps.activities.InitialActivity;
@@ -30,11 +30,14 @@ import it.units.adventuremaps.activities.CompletedExperiencesActivity;
 public class MainActivityFragment extends Fragment {
 
     private View view;
+    private Database database;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        database = new FirebaseDatabase(FirebaseAuth.getInstance().getCurrentUser());
 
         getCurrentObjectiveAndSetUserPoints();
 
@@ -59,8 +62,7 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void getCurrentObjectiveAndSetUserPoints() {
-        DatabaseConnector databaseConnector = new FirebaseDatabaseConnector(FirebaseAuth.getInstance().getCurrentUser());
-        databaseConnector.addDataEventListener(new DataEventListener() {
+        database.addDataEventListener(new DataEventListener() {
             @Override
             public void onDataAvailable(ArrayList<Experience> experiences) {
                 findObjective(experiences);

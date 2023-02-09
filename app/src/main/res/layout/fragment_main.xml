@@ -20,14 +20,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="60sp"
-            android:text="0"
-            android:textColor="@color/corn"/>
+            android:text="@string/zero_point"
+            android:textColor="@color/light_aquamarine"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="28sp"
-            android:text="points"
+            android:text="@string/points"
             android:layout_marginStart="10dp"/>
 
     </LinearLayout>
@@ -53,14 +53,14 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="16sp"
-            android:text="You don't have an objective."/>
+            android:text="@string/no_objective"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="12sp"
-            android:text="Open the map to see the eligible experiences."/>
+            android:text="@string/open_map"/>
 
     </LinearLayout>
 
@@ -75,7 +75,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your actual objective"
+            android:text="@string/actual_objective"
             android:layout_marginStart="10dp"
             android:textStyle="bold"
             android:textSize="20sp" />
@@ -104,7 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:text="Experience on the Lake"
+                    android:text=""
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:layout_marginBottom="10dp"/>
@@ -114,7 +114,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
-                    android:text="This is the description of the Experience in question"
+                    android:text=""
                     android:layout_gravity="center"
                     android:gravity="center" />
 
@@ -215,7 +215,7 @@
             app:cardCornerRadius="8dp"
             android:layout_marginBottom="10dp"
             android:focusable="true"
-            android:backgroundTint="@color/pacific_blue" >
+            android:backgroundTint="@color/pale_green" >
 
             <TextView
                 android:layout_width="wrap_content"

@@ -10,24 +10,26 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import it.units.adventuremaps.interfaces.DataEventListener;
-import it.units.adventuremaps.interfaces.DatabaseConnector;
+import it.units.adventuremaps.interfaces.Database;
 import it.units.adventuremaps.models.Experience;
-import it.units.adventuremaps.models.Zone;
 import it.units.adventuremaps.utils.ExperienceType;
 
 
-public class FirebaseDatabaseConnector implements DatabaseConnector {
+public class FirebaseDatabase implements Database {
 
     private static final String TAG = "FIREBASE_DB_CONNECTOR";
-    private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://adventuremaps-1205-default-rtdb.europe-west1.firebasedatabase.app");
+    private final com.google.firebase.database.FirebaseDatabase database = com.google.firebase.database.FirebaseDatabase.getInstance("https://adventuremaps-1205-default-rtdb.europe-west1.firebasedatabase.app");
     private final FirebaseUser user;
     private DataEventListener listener;
     private boolean experienceRequestedFromObjectiveExp = false;
@@ -42,7 +44,10 @@ public class FirebaseDatabaseConnector implements DatabaseConnector {
     private Experience objectiveExperience;
     private int userPoints;
 
-    public FirebaseDatabaseConnector(FirebaseUser currentUser) {
+    public FirebaseDatabase(FirebaseUser currentUser) {
+        if (currentUser == null) {
+            throw new IllegalArgumentException("current user is null");
+        }
         this.user = currentUser;
         loadExperiences();
         loadCompletedExperiences();
@@ -72,14 +77,14 @@ public class FirebaseDatabaseConnector implements DatabaseConnector {
     @Override
     public void setExperienceAsCompletedForUser(Experience completedExperience) {
         DatabaseReference completedRef = database.getReference().child("user_data").child(user.getUid()).child("completed_experiences");
-        Log.d(TAG, "setExperienceAsCompletedForUser: complExps = " + completedExperiences);
         if (completedExperiences != null) {
 
+            completedExperience.setFormattedDateOfCompletion(buildStringOfCurrentDate());
             completedExperiences.add(completedExperience);
 
             Map<String, String> valuesOfCompletedExperiences = new HashMap<>();
             for (Experience experience : completedExperiences) {
-                valuesOfCompletedExperiences.put(experience.getId(), "true");
+                valuesOfCompletedExperiences.put(experience.getId(), experience.getFormattedDateOfCompletion());
             }
 
             completedRef.setValue(valuesOfCompletedExperiences);
@@ -135,10 +140,6 @@ public class FirebaseDatabaseConnector implements DatabaseConnector {
         });
     }
 
-    private void loadExperiences(Zone zone) {
-
-    }
-
     private void loadCompletedExperiences() {
         DatabaseReference userRef = database.getReference().child("user_data").child(user.getUid())
                 .child("completed_experiences");
@@ -146,16 +147,16 @@ public class FirebaseDatabaseConnector implements DatabaseConnector {
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                completedExperiences.clear();
                 for (DataSnapshot dataExperience : snapshot.getChildren()) {
                     String experienceId = dataExperience.getKey();
 
                     if (experiences != null) {
 
-                        completedExperiences.clear();
-
                         for (Experience experience : experiences) {
                             if (experience.getId().equals(experienceId)) {
                                 experience.setIsCompletedByUser(true);
+                                experience.setFormattedDateOfCompletion(dataExperience.getValue(String.class));
                                 completedExperiences.add(experience);
                             }
                         }
@@ -263,6 +264,12 @@ public class FirebaseDatabaseConnector implements DatabaseConnector {
             listener.onDataAvailable(experiences);
             dataAreAvailableToClient = true;
         }
+    }
+
+    private static String buildStringOfCurrentDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        return formatter.format(date);
     }
 
 }

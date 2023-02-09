@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import it.units.adventuremaps.interfaces.DatabaseConnector;
+import it.units.adventuremaps.interfaces.Database;
 import it.units.adventuremaps.models.Experience;
 import it.units.adventuremaps.R;
 
@@ -21,16 +21,16 @@ import it.units.adventuremaps.R;
 public class BottomSheetFragment extends BottomSheetDialogFragment {
 
     private Experience experience;
-    private DatabaseConnector databaseConnector;
+    private Database database;
     private Button setObjButton;
 
     public BottomSheetFragment() {
         // Required empty public constructor
     }
 
-    public BottomSheetFragment(Experience experience, DatabaseConnector databaseConnector) {
+    public BottomSheetFragment(Experience experience, Database database) {
         this.experience = experience;
-        this.databaseConnector = databaseConnector;
+        this.database = database;
     }
 
     @Override
@@ -68,10 +68,10 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 if (experience.getIsTheObjective()) {
-                    databaseConnector.setObjectiveExperienceOfUser(null);
+                    database.setObjectiveExperienceOfUser(null);
                     setObjButton.setText(R.string.setObjective_buttonText);
                 } else {
-                    databaseConnector.setObjectiveExperienceOfUser(experience);
+                    database.setObjectiveExperienceOfUser(experience);
                     setObjButton.setText(R.string.removeObjective_buttonText);
                 }
             }

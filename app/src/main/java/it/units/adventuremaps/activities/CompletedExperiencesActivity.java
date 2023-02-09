@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 
 import it.units.adventuremaps.interfaces.DataEventListener;
 import it.units.adventuremaps.models.Experience;
-import it.units.adventuremaps.FirebaseDatabaseConnector;
+import it.units.adventuremaps.FirebaseDatabase;
 import it.units.adventuremaps.R;
 
 
@@ -26,9 +27,11 @@ public class CompletedExperiencesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.completed_experiences);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         mLinearLayout = (ViewGroup) findViewById(R.id.completedActivityLayout);
 
-        FirebaseDatabaseConnector databaseConnector = new FirebaseDatabaseConnector(FirebaseAuth.getInstance().getCurrentUser());
+        FirebaseDatabase databaseConnector = new FirebaseDatabase(FirebaseAuth.getInstance().getCurrentUser());
 
         databaseConnector.addDataEventListener(new DataEventListener() {
             @Override

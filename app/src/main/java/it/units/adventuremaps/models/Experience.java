@@ -3,6 +3,8 @@ package it.units.adventuremaps.models;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
+
 import it.units.adventuremaps.utils.ExperienceType;
 
 public class Experience {
@@ -14,6 +16,7 @@ public class Experience {
     private int points;
     private boolean isTheObjective;
     private boolean isCompletedByUser;
+    private String formattedDateOfCompletion;
 
     public Experience(String id, String name, String description, ExperienceType type, LatLng coordinates, int points) {
         this.id = id;
@@ -24,6 +27,7 @@ public class Experience {
         this.points = points;
         this.isTheObjective = false;
         this.isCompletedByUser = false;
+        this.formattedDateOfCompletion = "";
     }
 
     public String getId() {
@@ -58,12 +62,20 @@ public class Experience {
         return isCompletedByUser;
     }
 
+    public String getFormattedDateOfCompletion() {
+        return formattedDateOfCompletion;
+    }
+
     public void setIsTheObjective(boolean isTheObjective) {
         this.isTheObjective = isTheObjective;
     }
 
     public void setIsCompletedByUser(boolean isCompletedByUser) {
         this.isCompletedByUser = isCompletedByUser;
+    }
+
+    public void setFormattedDateOfCompletion(String date) {
+        this.formattedDateOfCompletion = date;
     }
 
 
