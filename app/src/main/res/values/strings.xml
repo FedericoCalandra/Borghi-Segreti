@@ -30,5 +30,7 @@
     <string name="map_view">Map View</string>
     <string name="user">User</string>
     <string name="user_info">User Info</string>
-    <string name="completed">Completed!</string>
+    <string name="completed">Completed in date </string>
+    <string name="completed_experiences_activity_title">Completed Experiences</string>
+    <string name="gained_points">+ %d points</string>
 </resources>

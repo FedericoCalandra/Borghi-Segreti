@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import it.units.adventuremaps.interfaces.DataEventListener;
 import it.units.adventuremaps.models.Experience;
@@ -23,7 +24,7 @@ import it.units.adventuremaps.R;
 public class CompletedExperiencesActivity extends AppCompatActivity {
 
     private static final String TAG = "COMPLETED_EXPERIENCES";
-    private ViewGroup mLinearLayout;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,7 @@ public class CompletedExperiencesActivity extends AppCompatActivity {
         setContentView(R.layout.completed_experiences);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mLinearLayout = (ViewGroup) findViewById(R.id.completedActivityLayout);
+        linearLayout = findViewById(R.id.linear_layout_cards);
 
         FirebaseDatabase databaseConnector = null;
         try {
@@ -41,7 +42,7 @@ public class CompletedExperiencesActivity extends AppCompatActivity {
                 public void onDataAvailable(ArrayList<Experience> experiences) {
                     for (Experience experience : experiences) {
                         if (experience.getIsCompletedByUser()) {
-                            addCardView(experience.getName(), "01/01/2023");
+                            addCardView(experience.getName(), experience.getFormattedDateOfCompletion(), experience.getPoints());
                         }
                     }
                 }
@@ -58,16 +59,18 @@ public class CompletedExperiencesActivity extends AppCompatActivity {
 
     }
 
-    private void addCardView(String experienceTitle, String date) {
-        View cardView = LayoutInflater.from(this).inflate(R.layout.completed_experience_card, mLinearLayout, false);
+    private void addCardView(String experienceTitle, String date, int points) {
+        View cardView = LayoutInflater.from(this).inflate(R.layout.completed_experience_card, linearLayout, false);
 
-        TextView titleView = (TextView) cardView.findViewById(R.id.completed_exp_title);
-        TextView dateView = (TextView) cardView.findViewById(R.id.completed_exp_date);
+        TextView titleView = cardView.findViewById(R.id.completed_exp_title);
+        TextView dateView = cardView.findViewById(R.id.completed_exp_date);
+        TextView pointsView = cardView.findViewById(R.id.gained_points);
 
         titleView.setText(experienceTitle);
         dateView.setText(date);
+        pointsView.setText(String.format(Locale.getDefault(), getString(R.string.gained_points), points));
 
-        mLinearLayout.addView(cardView);
+        linearLayout.addView(cardView);
     }
 
 }

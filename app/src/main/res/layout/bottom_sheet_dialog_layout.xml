@@ -52,6 +52,7 @@
         android:textSize="@dimen/completedTextSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/light_green"
         android:gravity="center_horizontal"
         android:layout_marginVertical="30dp"
         android:visibility="gone"

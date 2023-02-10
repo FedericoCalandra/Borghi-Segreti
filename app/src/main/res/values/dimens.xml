@@ -23,5 +23,6 @@
     <dimen name="card_text_size_main_view_tab">24sp</dimen>
     <dimen name="card_text_size">20sp</dimen>
     <dimen name="data_user_text_size">18sp</dimen>
-    <dimen name="completedTextSize">20sp</dimen>
+    <dimen name="completedTextSize">16sp</dimen>
+    <dimen name="gained_points_text_size">22sp</dimen>
 </resources>

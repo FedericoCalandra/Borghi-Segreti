@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/completed_exp_linear_layout"
-    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -30,15 +30,33 @@
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/medal" />
 
-            <TextView
-                android:id="@+id/completed_exp_title"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:paddingEnd="@dimen/completed_exp_end_padding_inner_card"
-                android:text=""
-                android:textSize="@dimen/completed_exp_title_text_size" />
+                android:paddingHorizontal="@dimen/completed_exp_end_padding_inner_card"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/completed_exp_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="@dimen/completed_exp_title_text_size" />
+
+                <TextView
+                    android:id="@+id/gained_points"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/light_green"
+                    android:textSize="@dimen/gained_points_text_size" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
