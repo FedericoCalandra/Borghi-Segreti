@@ -29,4 +29,5 @@
     <string name="completed_experiences">Completed Experiences</string>
     <string name="map_view">Map View</string>
     <string name="user">User</string>
+    <string name="user_info">User Info</string>
 </resources>
