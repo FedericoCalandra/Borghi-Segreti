@@ -1,6 +1,7 @@
 package it.units.adventuremaps.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import it.units.adventuremaps.R;
 
 public class CompletedExperiencesActivity extends AppCompatActivity {
 
+    private static final String TAG = "COMPLETED_EXPERIENCES";
     private ViewGroup mLinearLayout;
 
     @Override
@@ -31,24 +33,28 @@ public class CompletedExperiencesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         mLinearLayout = (ViewGroup) findViewById(R.id.completedActivityLayout);
 
-        FirebaseDatabase databaseConnector = new FirebaseDatabase(FirebaseAuth.getInstance().getCurrentUser());
-
-        databaseConnector.addDataEventListener(new DataEventListener() {
-            @Override
-            public void onDataAvailable(ArrayList<Experience> experiences) {
-                for (Experience experience : experiences) {
-                    if (experience.getIsCompletedByUser()) {
-                        addCardView(experience.getName(), "01/01/2023");
+        FirebaseDatabase databaseConnector = null;
+        try {
+            databaseConnector = new FirebaseDatabase(FirebaseAuth.getInstance().getCurrentUser());
+            databaseConnector.addDataEventListener(new DataEventListener() {
+                @Override
+                public void onDataAvailable(ArrayList<Experience> experiences) {
+                    for (Experience experience : experiences) {
+                        if (experience.getIsCompletedByUser()) {
+                            addCardView(experience.getName(), "01/01/2023");
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onStatusExperiencesChanged(ArrayList<Experience> changedExperiences) {}
+                @Override
+                public void onStatusExperiencesChanged(ArrayList<Experience> changedExperiences) {}
 
-            @Override
-            public void onPointsUpdated(int points) {}
-        });
+                @Override
+                public void onPointsUpdated(int points) {}
+            });
+        } catch (FirebaseDatabase.NullUserException e) {
+            Log.e(TAG, "onCreate: ", e);
+        }
 
     }
 

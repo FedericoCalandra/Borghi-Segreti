@@ -20,4 +20,6 @@
     <dimen name="first_logo_bottom_padding">50dp</dimen>
     <dimen name="first_logo_height">200dp</dimen>
     <dimen name="complete_experience_button_margin_bottom">50dp</dimen>
+    <dimen name="card_text_size_main_view_tab">24sp</dimen>
+    <dimen name="card_text_size">20sp</dimen>
 </resources>

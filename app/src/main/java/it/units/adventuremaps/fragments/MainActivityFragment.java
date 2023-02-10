@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,7 +18,9 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
+import it.units.adventuremaps.activities.MainActivity;
 import it.units.adventuremaps.interfaces.DataEventListener;
 import it.units.adventuremaps.interfaces.Database;
 import it.units.adventuremaps.models.Experience;
@@ -29,6 +32,7 @@ import it.units.adventuremaps.activities.CompletedExperiencesActivity;
 
 public class MainActivityFragment extends Fragment {
 
+    private static final String TAG = "MAIN_ACTIVITY";
     private View view;
     private Database database;
 
@@ -37,22 +41,26 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        database = new FirebaseDatabase(FirebaseAuth.getInstance().getCurrentUser());
+        try {
+            database = new FirebaseDatabase(FirebaseAuth.getInstance().getCurrentUser());
+            getCurrentObjectiveAndSetUserPoints();
 
-        getCurrentObjectiveAndSetUserPoints();
+            CardView mapsBtn = view.findViewById(R.id.map_button);
+            mapsBtn.setOnClickListener(mapBtnClickListener);
 
-        CardView mapsBtn = view.findViewById(R.id.map_button);
-        mapsBtn.setOnClickListener(mapBtnClickListener);
+            CardView achievementButton = view.findViewById(R.id.completed_exp_button);
+            achievementButton.setOnClickListener(completedExperienceBtnClickListener);
 
-        CardView achievementButton = view.findViewById(R.id.completed_exp_button);
-        achievementButton.setOnClickListener(completedExperienceBtnClickListener);
+            CardView userProfileBtn = view.findViewById(R.id.user_button);
+            userProfileBtn.setOnClickListener(userBtnClickListener);
 
-        CardView userProfileBtn = view.findViewById(R.id.user_button);
-        userProfileBtn.setOnClickListener(userBtnClickListener);
-
-        CardView logOutBtn = view.findViewById(R.id.logout_button);
-        logOutBtn.setOnClickListener(logOutBtnClickListener);
-
+            CardView logOutBtn = view.findViewById(R.id.logout_button);
+            logOutBtn.setOnClickListener(logOutBtnClickListener);
+        } catch (FirebaseDatabase.NullUserException e) {
+            Log.e(TAG, "onCreateView: ", e);
+            MainActivity mainActivity = (MainActivity)getActivity();
+            Objects.requireNonNull(mainActivity).startInitialActivity();
+        }
         return view;
     }
 

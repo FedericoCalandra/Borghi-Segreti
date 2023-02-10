@@ -44,9 +44,9 @@ public class FirebaseDatabase implements Database {
     private Experience objectiveExperience;
     private int userPoints;
 
-    public FirebaseDatabase(FirebaseUser currentUser) {
+    public FirebaseDatabase(FirebaseUser currentUser) throws NullUserException {
         if (currentUser == null) {
-            throw new IllegalArgumentException("current user is null");
+            throw new NullUserException("current user is null");
         }
         this.user = currentUser;
         loadExperiences();
@@ -270,6 +270,12 @@ public class FirebaseDatabase implements Database {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
         return formatter.format(date);
+    }
+
+    public static class NullUserException extends Exception {
+        public NullUserException(String message) {
+            super(message);
+        }
     }
 
 }

@@ -72,33 +72,36 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
         isTestModeEnabled = sharedPreferences.getBoolean(getString(R.string.test_key), false);
         Log.d(TAG, "TestMode = " + isTestModeEnabled);
 
-        database = new FirebaseDatabase(FirebaseAuth.getInstance().getCurrentUser());
-        Log.d(TAG, "onCreate: database = " + database);
-        database.addDataEventListener(new DataEventListener() {
-            @Override
-            public void onDataAvailable(ArrayList<Experience> experiencesLoaded) {
-                experiences = experiencesLoaded;
-                drawAllMarkerExperiences();
-            }
-            @Override
-            public void onStatusExperiencesChanged(ArrayList<Experience> changedExperiences) {
-                if (allMarkersAreSet) {
-                    boolean thereIsAnObjectiveExperience = false;
-                    for (Experience experience : changedExperiences) {
-                        drawExperienceMarker(experience);
-                        if (experience.getIsTheObjective()) {
-                            objectiveExperience = experience;
-                            thereIsAnObjectiveExperience = true;
+        try {
+            database = new FirebaseDatabase(FirebaseAuth.getInstance().getCurrentUser());
+            database.addDataEventListener(new DataEventListener() {
+                @Override
+                public void onDataAvailable(ArrayList<Experience> experiencesLoaded) {
+                    experiences = experiencesLoaded;
+                    drawAllMarkerExperiences();
+                }
+                @Override
+                public void onStatusExperiencesChanged(ArrayList<Experience> changedExperiences) {
+                    if (allMarkersAreSet) {
+                        boolean thereIsAnObjectiveExperience = false;
+                        for (Experience experience : changedExperiences) {
+                            drawExperienceMarker(experience);
+                            if (experience.getIsTheObjective()) {
+                                objectiveExperience = experience;
+                                thereIsAnObjectiveExperience = true;
+                            }
+                        }
+                        if (!thereIsAnObjectiveExperience) {
+                            objectiveExperience = null;
                         }
                     }
-                    if (!thereIsAnObjectiveExperience) {
-                        objectiveExperience = null;
-                    }
                 }
-            }
-            @Override
-            public void onPointsUpdated(int points) {}
-        });
+                @Override
+                public void onPointsUpdated(int points) {}
+            });
+        } catch (FirebaseDatabase.NullUserException e) {
+            Log.e(TAG, "onCreate: ", e);
+        }
     }
 
     @Override

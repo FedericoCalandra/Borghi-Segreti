@@ -25,4 +25,8 @@
     <string name="open_map">Open the map to see the eligible experiences.</string>
     <string name="actual_objective">Your actual objective</string>
     <string name="complete_experience">Complete the experience</string>
+    <string name="log_out">Log out</string>
+    <string name="completed_experiences">Completed Experiences</string>
+    <string name="map_view">Map View</string>
+    <string name="user">User</string>
 </resources>

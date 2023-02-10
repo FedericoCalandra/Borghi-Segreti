@@ -33,17 +33,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("DEB_MainActivity", "onCreate()");
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Log.d("DEB_MainActivity", "currentUser == null !");
-            Intent firstIntent = new Intent(this, InitialActivity.class);
-            startActivity(firstIntent);
+            startInitialActivity();
         } else {
-            Log.d("DEB_MainActivity", "currentUser = " + currentUser);
             FirebaseDatabase database = FirebaseDatabase.getInstance("https://adventuremaps-1205-default-rtdb.europe-west1.firebasedatabase.app");
-
             String uId = currentUser.getUid();
             DatabaseReference ref = database.getReference("user_data").child(uId);
 
@@ -68,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
         PreferenceManager.getDefaultSharedPreferences(this).
                 registerOnSharedPreferenceChangeListener(
                         preferencesChangeListener);
+    }
+
+    public void startInitialActivity() {
+        Intent firstIntent = new Intent(this, InitialActivity.class);
+        startActivity(firstIntent);
     }
 
     @Override
