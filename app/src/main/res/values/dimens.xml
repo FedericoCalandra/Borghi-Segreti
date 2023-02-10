@@ -9,8 +9,8 @@
     <dimen name="sign_in_top_margin">4dp</dimen>
     <dimen name="activity_horizontal_margin">8dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="experienceTitleSize">28sp</dimen>
-    <dimen name="experienceDescriptionSize">18sp</dimen>
+    <dimen name="experienceTitleSize">22sp</dimen>
+    <dimen name="experienceDescriptionSize">16sp</dimen>
     <dimen name="completed_exp_end_padding_inner_card">10dp</dimen>
     <dimen name="completed_exp_title_text_size">20sp</dimen>
     <dimen name="completed_exp_date_text_size">10sp</dimen>
@@ -23,4 +23,5 @@
     <dimen name="card_text_size_main_view_tab">24sp</dimen>
     <dimen name="card_text_size">20sp</dimen>
     <dimen name="data_user_text_size">18sp</dimen>
+    <dimen name="completedTextSize">20sp</dimen>
 </resources>

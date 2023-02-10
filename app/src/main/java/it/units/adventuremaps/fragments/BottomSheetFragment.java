@@ -1,11 +1,14 @@
 package it.units.adventuremaps.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,13 +16,17 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import it.units.adventuremaps.R;
 import it.units.adventuremaps.interfaces.Database;
 import it.units.adventuremaps.models.Experience;
-import it.units.adventuremaps.R;
 
 
 public class BottomSheetFragment extends BottomSheetDialogFragment {
 
+    private static final String TAG = "BOTTOM_SHEET_FRAGMENT";
     private Experience experience;
     private Database database;
     private Button setObjButton;
@@ -44,21 +51,28 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottom_sheet_dialog_layout, container, false);
 
+        ImageView icon = view.findViewById(R.id.experience_icon);
         TextView title = view.findViewById(R.id.experience_title);
         TextView description = view.findViewById(R.id.experience_description);
         setObjButton = view.findViewById(R.id.set_objective_button);
 
+        InputStream iconImage;
+        try {
+            iconImage = requireActivity().getAssets().open("icons/star.png");
+            Drawable iconDrawable = Drawable.createFromStream(iconImage, null);
+            icon.setImageDrawable(iconDrawable);
+        } catch (IOException e) {
+            Log.e(TAG, "onCreateView: ", e);;
+        }
+
         title.setText(experience.getName());
         description.setText(experience.getDescription());
+
         if (experience.getIsCompletedByUser()) {
-            setObjButton.setVisibility(View.INVISIBLE);
-            TextView completedText = new TextView(getActivity());
-            completedText.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT));
-            completedText.setText("COMPLETED!");
-            LinearLayout bottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
-            bottomSheetLayout.addView(completedText);
+            setObjButton.setVisibility(View.GONE);
+            TextView completedText = view.findViewById(R.id.completed_text_view);
+            completedText.setText(R.string.completed);
+            completedText.setVisibility(View.VISIBLE);
         }
         if (experience.getIsTheObjective()) {
             setObjButton.setText(R.string.removeObjective_buttonText);
