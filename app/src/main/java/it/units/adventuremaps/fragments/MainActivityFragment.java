@@ -29,6 +29,7 @@ import it.units.adventuremaps.R;
 import it.units.adventuremaps.activities.UserProfileActivity;
 import it.units.adventuremaps.activities.InitialActivity;
 import it.units.adventuremaps.activities.CompletedExperiencesActivity;
+import it.units.adventuremaps.models.Zone;
 
 public class MainActivityFragment extends Fragment {
 
@@ -72,7 +73,7 @@ public class MainActivityFragment extends Fragment {
     private void getCurrentObjectiveAndSetUserPoints() {
         database.addDataEventListener(new DataEventListener() {
             @Override
-            public void onDataAvailable(ArrayList<Experience> experiences) {
+            public void onDataAvailable(ArrayList<Experience> experiences, ArrayList<Zone> zones) {
                 findObjective(experiences);
             }
 

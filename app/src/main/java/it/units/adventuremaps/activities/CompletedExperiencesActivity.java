@@ -19,6 +19,7 @@ import it.units.adventuremaps.interfaces.DataEventListener;
 import it.units.adventuremaps.models.Experience;
 import it.units.adventuremaps.FirebaseDatabase;
 import it.units.adventuremaps.R;
+import it.units.adventuremaps.models.Zone;
 
 
 public class CompletedExperiencesActivity extends AppCompatActivity {
@@ -39,7 +40,7 @@ public class CompletedExperiencesActivity extends AppCompatActivity {
             databaseConnector = new FirebaseDatabase(FirebaseAuth.getInstance().getCurrentUser());
             databaseConnector.addDataEventListener(new DataEventListener() {
                 @Override
-                public void onDataAvailable(ArrayList<Experience> experiences) {
+                public void onDataAvailable(ArrayList<Experience> experiences, ArrayList<Zone> zones) {
                     for (Experience experience : experiences) {
                         if (experience.getIsCompletedByUser()) {
                             addCardView(experience.getName(), experience.getFormattedDateOfCompletion(), experience.getPoints());

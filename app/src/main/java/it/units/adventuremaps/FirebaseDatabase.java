@@ -21,6 +21,7 @@ import java.util.Map;
 import it.units.adventuremaps.interfaces.DataEventListener;
 import it.units.adventuremaps.interfaces.Database;
 import it.units.adventuremaps.models.Experience;
+import it.units.adventuremaps.models.Zone;
 import it.units.adventuremaps.utils.ExperienceType;
 
 
@@ -37,6 +38,7 @@ public class FirebaseDatabase implements Database {
     private boolean dataAreAvailableToClient = false;
 
 
+    private ArrayList<Zone> zones;
     private ArrayList<Experience> experiences;
     private final ArrayList<Experience> completedExperiences;
     private Experience objectiveExperience;
@@ -47,6 +49,7 @@ public class FirebaseDatabase implements Database {
             throw new NullUserException("current user is null");
         }
         this.user = currentUser;
+        loadZones();
         loadExperiences();
         loadCompletedExperiences();
         loadObjectiveExperience();
@@ -90,6 +93,33 @@ public class FirebaseDatabase implements Database {
             DatabaseReference pointsRef = database.getReference().child("user_data").child(user.getUid()).child("points");
             pointsRef.setValue(userPoints + completedExperience.getPoints());
         }
+    }
+
+    private void loadZones() {
+        DatabaseReference zonesRef = database.getReference().child("zones");
+
+        zonesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                zones = new ArrayList<>();
+
+                for (DataSnapshot dataZones : snapshot.getChildren()) {
+                    Log.d(TAG, "onDataChange: ZONES");
+                    String zoneName = dataZones.child("name").getValue(String.class);
+                    Double latitude = dataZones.child("coordinates").child("latitude").getValue(Double.class);
+                    Double longitude = dataZones.child("coordinates").child("longitude").getValue(Double.class);
+                    LatLng zoneCoordinates = new LatLng(latitude, longitude);
+                    zones.add(new Zone(zoneName, zoneCoordinates));
+                }
+                callListener();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "error: " + error.getMessage());
+            }
+        });
     }
 
     private void loadExperiences() {
@@ -258,8 +288,8 @@ public class FirebaseDatabase implements Database {
     }
 
     private void callListener() {
-        if (listener != null && experiences != null && completedExperiencesLoaded && objectiveExperienceLoaded) {
-            listener.onDataAvailable(experiences);
+        if (listener != null && experiences != null && zones != null && completedExperiencesLoaded && objectiveExperienceLoaded) {
+            listener.onDataAvailable(experiences, zones);
             dataAreAvailableToClient = true;
         }
     }

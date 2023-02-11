@@ -11,4 +11,12 @@ public class Zone {
         this.name = name;
         this.coordinates = coordinates;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public LatLng getCoordinates() {
+        return coordinates;
+    }
 }

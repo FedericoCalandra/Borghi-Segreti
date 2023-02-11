@@ -35,6 +35,7 @@ import it.units.adventuremaps.FirebaseDatabase;
 import it.units.adventuremaps.interfaces.DataEventListener;
 import it.units.adventuremaps.interfaces.Database;
 import it.units.adventuremaps.models.Experience;
+import it.units.adventuremaps.models.Zone;
 import it.units.adventuremaps.utils.Locator;
 import it.units.adventuremaps.interfaces.OnObjectiveInRangeEventListener;
 import it.units.adventuremaps.interfaces.OnUserLocationUpdateListener;
@@ -53,7 +54,9 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
     private boolean isTestModeEnabled;
     private boolean isMapReady = false;
     private ArrayList<Experience> experiences;
+    private ArrayList<Zone> zones;
     private final Map<Marker, Experience> drawnMarkerExperienceMap = new HashMap<>();
+    private final Map<Marker, Zone> drawnMarkerZoneMap = new HashMap<>();
     private boolean allMarkersAreSet = false;
     private Locator locator;
     private Database database;
@@ -76,9 +79,9 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
             database = new FirebaseDatabase(FirebaseAuth.getInstance().getCurrentUser());
             database.addDataEventListener(new DataEventListener() {
                 @Override
-                public void onDataAvailable(ArrayList<Experience> experiencesLoaded) {
+                public void onDataAvailable(ArrayList<Experience> experiencesLoaded, ArrayList<Zone> zonesLoaded) {
                     experiences = experiencesLoaded;
-                    drawAllMarkerExperiences();
+                    zones = zonesLoaded;
                 }
                 @Override
                 public void onStatusExperiencesChanged(ArrayList<Experience> changedExperiences) {
@@ -101,6 +104,23 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
             });
         } catch (FirebaseDatabase.NullUserException e) {
             Log.e(TAG, "onCreate: ", e);
+        }
+    }
+
+    private void removeAllMarkersAndAddZoneMarkers() {
+        for (Marker marker : drawnMarkerExperienceMap.keySet()) {
+            marker.remove();
+        }
+        drawnMarkerExperienceMap.clear();
+
+        if (zones != null) {
+            for (Zone zone : zones) {
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(zone.getCoordinates())
+                        .title(zone.getName())
+                        .icon(BitmapDescriptorFactory.defaultMarker()));
+                drawnMarkerZoneMap.put(marker, zone);
+            }
         }
     }
 
@@ -147,11 +167,23 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
             mMap.setOnMapLongClickListener(this);
         }
 
-        drawAllMarkerExperiences();
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                if (mMap.getCameraPosition().zoom < 12) {
+                    removeAllMarkersAndAddZoneMarkers();
+                } else if (mMap.getCameraPosition().zoom >= 12) {
+                    drawAllMarkerExperiences();
+                }
+            }
+        });
     }
 
     private void drawAllMarkerExperiences() {
-        if (isMapReady && experiences != null) {
+        for (Marker marker : drawnMarkerZoneMap.keySet()) {
+            marker.remove();
+        }
+        if (experiences != null) {
             for (Experience experience : experiences) {
                 drawExperienceMarker(experience);
                 if (experience.getIsTheObjective()) {
@@ -166,9 +198,11 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
     public boolean onMarkerClick(@NonNull final Marker marker) {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f));
         Experience experience = drawnMarkerExperienceMap.get(marker);
-        BottomSheetFragment blankFragment = new BottomSheetFragment(experience, database);
+        if (experience != null) {
+            BottomSheetFragment blankFragment = new BottomSheetFragment(experience, database);
 
-        blankFragment.show(getSupportFragmentManager(),blankFragment.getTag());
+            blankFragment.show(getSupportFragmentManager(), blankFragment.getTag());
+        }
         return true;
     }
 
