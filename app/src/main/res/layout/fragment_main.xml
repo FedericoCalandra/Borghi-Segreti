@@ -218,7 +218,7 @@
             app:cardCornerRadius="8dp"
             android:layout_marginBottom="10dp"
             android:focusable="true"
-            android:backgroundTint="@color/light_aquamarine" >
+            android:backgroundTint="@color/darker_cyan" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -226,6 +226,7 @@
                 android:layout_gravity="center"
                 android:text="@string/log_out"
                 android:textSize="@dimen/card_text_size"
+                android:textColor="@color/white"
                 android:textStyle="bold"
                 android:translationZ="1dp" />
 

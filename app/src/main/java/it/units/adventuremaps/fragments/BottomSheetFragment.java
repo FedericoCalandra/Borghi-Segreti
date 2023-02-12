@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.io.IOException;
@@ -22,6 +23,8 @@ import java.io.InputStream;
 import it.units.adventuremaps.R;
 import it.units.adventuremaps.interfaces.Database;
 import it.units.adventuremaps.models.Experience;
+import it.units.adventuremaps.utils.ExperienceType;
+import it.units.adventuremaps.utils.IconBuilder;
 
 
 public class BottomSheetFragment extends BottomSheetDialogFragment {
@@ -58,7 +61,8 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
 
         InputStream iconImage;
         try {
-            iconImage = requireActivity().getAssets().open("icons/star.png");
+            IconBuilder builder = new IconBuilder(getContext(), experience);
+            iconImage = builder.getExperienceIcon();
             Drawable iconDrawable = Drawable.createFromStream(iconImage, null);
             icon.setImageDrawable(iconDrawable);
         } catch (IOException e) {
@@ -93,4 +97,5 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         });
         return view;
     }
+
 }

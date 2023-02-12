@@ -3,6 +3,7 @@ package it.units.adventuremaps.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,8 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -27,9 +31,10 @@ import it.units.adventuremaps.models.Experience;
 import it.units.adventuremaps.FirebaseDatabase;
 import it.units.adventuremaps.R;
 import it.units.adventuremaps.activities.UserProfileActivity;
-import it.units.adventuremaps.activities.InitialActivity;
+import it.units.adventuremaps.activities.SignInActivity;
 import it.units.adventuremaps.activities.CompletedExperiencesActivity;
 import it.units.adventuremaps.models.Zone;
+import it.units.adventuremaps.utils.IconBuilder;
 
 public class MainActivityFragment extends Fragment {
 
@@ -58,9 +63,9 @@ public class MainActivityFragment extends Fragment {
             CardView logOutBtn = view.findViewById(R.id.logout_button);
             logOutBtn.setOnClickListener(logOutBtnClickListener);
         } catch (FirebaseDatabase.NullUserException e) {
-            Log.e(TAG, "onCreateView: ", e);
+            Log.d(TAG, "onCreateView: ", e);
             MainActivity mainActivity = (MainActivity)getActivity();
-            Objects.requireNonNull(mainActivity).startInitialActivity();
+            Objects.requireNonNull(mainActivity).startSignInActivity();
         }
         return view;
     }
@@ -112,12 +117,21 @@ public class MainActivityFragment extends Fragment {
         View noObjectiveLayout = view.findViewById(R.id.no_objective_view);
         noObjectiveLayout.setVisibility(View.GONE);
 
-
         TextView experienceTitle = view.findViewById(R.id.experience_title_main_fragment);
         TextView experienceDescription = view.findViewById(R.id.experience_description_main_fragment);
+        ImageView experienceImage = view.findViewById(R.id.experience_icon);
 
         experienceTitle.setText(objective.getName());
         experienceDescription.setText(objective.getDescription());
+        InputStream iconImage;
+        try {
+            IconBuilder builder = new IconBuilder(getContext(), objective);
+            iconImage = builder.getExperienceIcon();
+            Drawable iconDrawable = Drawable.createFromStream(iconImage, null);
+            experienceImage.setImageDrawable(iconDrawable);
+        } catch (IOException e) {
+            Log.e(TAG, "onCreateView: ", e);;
+        }
     }
 
     private final OnClickListener mapBtnClickListener = new OnClickListener() {
@@ -156,21 +170,19 @@ public class MainActivityFragment extends Fragment {
                 public void onClick(DialogInterface dialog, int id) {
                     FirebaseAuth auth = FirebaseAuth.getInstance();
                     auth.signOut();
-                    Toast.makeText(getActivity(), "User signed out", Toast.LENGTH_SHORT).show();
-                    Intent firstIntent = new Intent(getActivity(), InitialActivity.class);
+                    Toast.makeText(getActivity(), getString(R.string.user_signed_out_toast), Toast.LENGTH_SHORT).show();
+                    Intent firstIntent = new Intent(getActivity(), SignInActivity.class);
                     Handler handler = new Handler();
                     handler.postDelayed(
                             new Runnable() {
                                 @Override
                                 public void run() {
                                     startActivity(firstIntent);
+                                    getActivity().finish();
                                 }
                             }
                             , 200);
                 }
-            });
-            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {}
             });
 
             AlertDialog dialog = builder.create();

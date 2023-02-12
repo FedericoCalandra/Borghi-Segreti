@@ -1,13 +1,16 @@
 package it.units.adventuremaps.activities;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
@@ -18,11 +21,11 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Collections;
 import java.util.Objects;
 
+import it.units.adventuremaps.R;
+
 public class SignInActivity extends AppCompatActivity {
 
-    private static final String TAG = "FIREBASE AUTH";
-    private FirebaseAuth mAuth;
-
+    private static final String TAG = "SIGN_IN";
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
             new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
@@ -33,18 +36,38 @@ public class SignInActivity extends AppCompatActivity {
             }
     );
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
+    private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
+        IdpResponse response = result.getIdpResponse();
+        if (result.getResultCode() == RESULT_OK) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            Log.d(TAG, "User authentication: " + user);
+            Intent mainActivityIntent = new Intent(this, MainActivity.class);
+            startActivity(mainActivityIntent);
+            finish();
+        } else {
+            if (response == null) {
+                Log.d(TAG, "User canceled authentication");
+            } else{
+                Log.d(TAG, "Error: " +
+                        Objects.requireNonNull(response.getError())
+                                .getLocalizedMessage());
+            }
+        }
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+    protected void onCreate(Bundle savedInstance) {
+        super.onCreate(savedInstance);
+        setContentView(R.layout.activity_sign_in);
 
-        if (currentUser == null) {
+        Button logInBtn = findViewById(R.id.logInButton);
+
+        logInBtn.setOnClickListener(logInBtnClickListener);
+    }
+
+    private final OnClickListener logInBtnClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
             Intent signInIntent = AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setAvailableProviders(
@@ -53,26 +76,6 @@ public class SignInActivity extends AppCompatActivity {
                     .setIsSmartLockEnabled(false)
                     .build();
             signInLauncher.launch(signInIntent);
-        } else {
-            Intent mainActivityIntent = new Intent(this, MainActivity.class);
-            startActivity(mainActivityIntent);
         }
-    }
-
-    private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
-        IdpResponse response = result.getIdpResponse();
-        if (result.getResultCode() == RESULT_OK) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            Log.d(TAG, "User authentication: " + user);
-        } else {
-            if (response == null) {
-                Log.d(TAG, "User canceled authentication");
-            } else{
-                Log.d(TAG, "Error: " +
-                        Objects.requireNonNull(response.getError())
-                        .getLocalizedMessage());
-            }
-        }
-    }
-
+    };
 }

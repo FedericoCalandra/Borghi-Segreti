@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/completed_exp_linear_layout"
     android:layout_marginBottom="20dp"
-    android:layout_width="300dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginHorizontal="20dp"
     android:layout_gravity="center"
     android:orientation="vertical">
 
@@ -21,11 +22,12 @@
             android:id="@+id/completed_exp_inner_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/completed_exp_image"
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/medal" />

@@ -1,9 +1,11 @@
 package it.units.adventuremaps.activities;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,6 +14,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -20,6 +24,7 @@ import it.units.adventuremaps.models.Experience;
 import it.units.adventuremaps.FirebaseDatabase;
 import it.units.adventuremaps.R;
 import it.units.adventuremaps.models.Zone;
+import it.units.adventuremaps.utils.IconBuilder;
 
 
 public class CompletedExperiencesActivity extends AppCompatActivity {
@@ -43,7 +48,7 @@ public class CompletedExperiencesActivity extends AppCompatActivity {
                 public void onDataAvailable(ArrayList<Experience> experiences, ArrayList<Zone> zones) {
                     for (Experience experience : experiences) {
                         if (experience.getIsCompletedByUser()) {
-                            addCardView(experience.getName(), experience.getFormattedDateOfCompletion(), experience.getPoints());
+                            addCardView(experience);
                         }
                     }
                 }
@@ -60,16 +65,26 @@ public class CompletedExperiencesActivity extends AppCompatActivity {
 
     }
 
-    private void addCardView(String experienceTitle, String date, int points) {
+    private void addCardView(Experience experience) {
         View cardView = LayoutInflater.from(this).inflate(R.layout.completed_experience_card, linearLayout, false);
 
         TextView titleView = cardView.findViewById(R.id.completed_exp_title);
         TextView dateView = cardView.findViewById(R.id.completed_exp_date);
         TextView pointsView = cardView.findViewById(R.id.gained_points);
+        ImageView experienceIcon = cardView.findViewById(R.id.completed_exp_image);
 
-        titleView.setText(experienceTitle);
-        dateView.setText(date);
-        pointsView.setText(String.format(Locale.getDefault(), getString(R.string.gained_points), points));
+        titleView.setText(experience.getName());
+        dateView.setText(experience.getFormattedDateOfCompletion());
+        pointsView.setText(String.format(Locale.getDefault(), getString(R.string.gained_points), experience.getPoints()));
+        InputStream iconImage;
+        try {
+            IconBuilder builder = new IconBuilder(this, experience);
+            iconImage = builder.getExperienceIcon();
+            Drawable iconDrawable = Drawable.createFromStream(iconImage, null);
+            experienceIcon.setImageDrawable(iconDrawable);
+        } catch (IOException e) {
+            Log.e(TAG, "onCreateView: ", e);;
+        }
 
         linearLayout.addView(cardView);
     }

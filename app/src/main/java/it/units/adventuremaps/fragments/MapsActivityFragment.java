@@ -2,6 +2,9 @@ package it.units.adventuremaps.fragments;
 
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -28,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,7 +46,7 @@ import it.units.adventuremaps.interfaces.OnObjectiveInRangeEventListener;
 import it.units.adventuremaps.interfaces.OnUserLocationUpdateListener;
 import it.units.adventuremaps.R;
 import it.units.adventuremaps.activities.MainActivity;
-import it.units.adventuremaps.utils.MarkerIconBuilder;
+import it.units.adventuremaps.utils.IconBuilder;
 
 
 public class MapsActivityFragment extends FragmentActivity implements OnMapReadyCallback,
@@ -107,23 +112,6 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
         }
     }
 
-    private void removeAllMarkersAndAddZoneMarkers() {
-        for (Marker marker : drawnMarkerExperienceMap.keySet()) {
-            marker.remove();
-        }
-        drawnMarkerExperienceMap.clear();
-
-        if (zones != null) {
-            for (Zone zone : zones) {
-                Marker marker = mMap.addMarker(new MarkerOptions()
-                        .position(zone.getCoordinates())
-                        .title(zone.getName())
-                        .icon(BitmapDescriptorFactory.defaultMarker()));
-                drawnMarkerZoneMap.put(marker, zone);
-            }
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -135,6 +123,7 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
                 drawUserLocationMarker(userLocation);
             }
         });
+        Activity thisActivity = this;
         locator.addOnObjectiveInRangeEventListener(new OnObjectiveInRangeEventListener() {
             final Button completeExperienceButton = findViewById(R.id.complete_exp_button);
             @Override
@@ -144,8 +133,20 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
                 completeExperienceButton.setOnClickListener(view -> {
                     database.setExperienceAsCompletedForUser(objectiveExperience);
                     database.setObjectiveExperienceOfUser(null);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
+                    builder.setMessage(String.format(Locale.getDefault(), getString(R.string.gained_points_alert), objectiveExperience.getPoints()))
+                            .setTitle(R.string.experience_completed);
+
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(thisActivity, getString(R.string.next_objective_toast), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     objectiveExperience = null;
                     completeExperienceButton.setVisibility(View.GONE);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 });
             }
 
@@ -171,15 +172,32 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
             @Override
             public void onCameraMove() {
                 if (mMap.getCameraPosition().zoom < 12) {
-                    removeAllMarkersAndAddZoneMarkers();
+                    drawAllZoneMarkers();
                 } else if (mMap.getCameraPosition().zoom >= 12) {
-                    drawAllMarkerExperiences();
+                    drawAllExperienceMarkers();
                 }
             }
         });
     }
 
-    private void drawAllMarkerExperiences() {
+    private void drawAllZoneMarkers() {
+        for (Marker marker : drawnMarkerExperienceMap.keySet()) {
+            marker.remove();
+        }
+        drawnMarkerExperienceMap.clear();
+
+        if (zones != null) {
+            for (Zone zone : zones) {
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(zone.getCoordinates())
+                        .title(zone.getName())
+                        .icon(BitmapDescriptorFactory.defaultMarker()));
+                drawnMarkerZoneMap.put(marker, zone);
+            }
+        }
+    }
+
+    private void drawAllExperienceMarkers() {
         for (Marker marker : drawnMarkerZoneMap.keySet()) {
             marker.remove();
         }
@@ -196,12 +214,21 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
 
     @Override
     public boolean onMarkerClick(@NonNull final Marker marker) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f));
-        Experience experience = drawnMarkerExperienceMap.get(marker);
-        if (experience != null) {
-            BottomSheetFragment blankFragment = new BottomSheetFragment(experience, database);
 
-            blankFragment.show(getSupportFragmentManager(), blankFragment.getTag());
+        Zone zone = drawnMarkerZoneMap.get(marker);
+        Experience experience = drawnMarkerExperienceMap.get(marker);
+        if (zone != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 12f));
+        } else if (experience != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 16f), new GoogleMap.CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    BottomSheetFragment blankFragment = new BottomSheetFragment(experience, database);
+                    blankFragment.show(getSupportFragmentManager(), blankFragment.getTag());
+                }
+                @Override
+                public void onCancel() {}
+            });
         }
         return true;
     }
@@ -223,9 +250,9 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
                     .snippet(experience.getDescription()));
             drawnMarkerExperienceMap.put(marker, experience);
         }
-        MarkerIconBuilder markerBuilder = new MarkerIconBuilder(experience);
-        Objects.requireNonNull(marker).setIcon(markerBuilder.buildDescriptor());
-        Objects.requireNonNull(marker).setAlpha(markerBuilder.getAlpha());
+        IconBuilder markerBuilder = new IconBuilder(this, experience);
+        Objects.requireNonNull(marker).setIcon(markerBuilder.buildMarkerDescriptor());
+        Objects.requireNonNull(marker).setAlpha(markerBuilder.getMarkerAlpha());
     }
 
     private Marker findMarkerAssociatedToExperience(Experience experience) {
@@ -250,7 +277,7 @@ public class MapsActivityFragment extends FragmentActivity implements OnMapReady
                         .title("User Location")
                         .anchor(0.5f, 0.5f)
                         .icon(BitmapDescriptorFactory.fromAsset("markers/UserIcon.png")));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(userCoordinates));
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(userCoordinates));
             }
         }
     }

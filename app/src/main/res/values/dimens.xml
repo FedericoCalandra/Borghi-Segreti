@@ -25,4 +25,5 @@
     <dimen name="data_user_text_size">18sp</dimen>
     <dimen name="completedTextSize">16sp</dimen>
     <dimen name="gained_points_text_size">22sp</dimen>
+    <dimen name="complete_experience_button_text_size">16sp</dimen>
 </resources>

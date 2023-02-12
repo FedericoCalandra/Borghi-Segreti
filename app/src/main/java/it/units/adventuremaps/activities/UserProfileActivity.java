@@ -24,11 +24,14 @@ public class UserProfileActivity extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String username = "Username:   " + Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
         String email = "Email:   " + Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+        String userId = "ID: " + Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
         TextView usernameTextView = findViewById(R.id.usernameTextView);
         usernameTextView.setText(username);
         TextView emailTextView = findViewById(R.id.emailTextView);
         emailTextView.setText(email);
+        TextView userIdView = findViewById(R.id.user_id);
+        userIdView.setText(userId);
     }
 
 }

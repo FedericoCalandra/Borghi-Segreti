@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            startInitialActivity();
+            startSignInActivity();
         } else {
             FirebaseDatabase database = FirebaseDatabase.getInstance("https://adventuremaps-1205-default-rtdb.europe-west1.firebasedatabase.app");
             String uId = currentUser.getUid();
@@ -53,21 +52,23 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {}
             });
+
+            setContentView(R.layout.activity_main);
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+
+            PreferenceManager.setDefaultValues(this,R.xml.preferences, false);
+
+            PreferenceManager.getDefaultSharedPreferences(this).
+                    registerOnSharedPreferenceChangeListener(
+                            preferencesChangeListener);
         }
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        PreferenceManager.setDefaultValues(this,R.xml.preferences, false);
-
-        PreferenceManager.getDefaultSharedPreferences(this).
-                registerOnSharedPreferenceChangeListener(
-                        preferencesChangeListener);
     }
 
-    public void startInitialActivity() {
-        Intent firstIntent = new Intent(this, InitialActivity.class);
+    public void startSignInActivity() {
+        Intent firstIntent = new Intent(this, SignInActivity.class);
         startActivity(firstIntent);
+        finish();
     }
 
     @Override
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Intent firstIntent = new Intent(this, InitialActivity.class);
+            Intent firstIntent = new Intent(this, SignInActivity.class);
             startActivity(firstIntent);
         }
     }

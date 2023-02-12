@@ -22,13 +22,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/user_info"
-        android:textSize="26sp"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="30dp"/>
 
     <ImageView
         android:layout_width="150dp"
@@ -55,4 +48,14 @@
         android:layout_height="wrap_content"
         android:gravity="start"
         android:layout_marginHorizontal="30dp" />
+
+    <TextView
+        android:id="@+id/user_id"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/data_user_text_size"
+        android:gravity="start"
+        android:layout_marginHorizontal="30dp"/>
+
 </LinearLayout>

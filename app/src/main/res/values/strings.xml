@@ -31,6 +31,10 @@
     <string name="user">User</string>
     <string name="user_info">User Info</string>
     <string name="completed">Completed in date </string>
-    <string name="completed_experiences_activity_title">Completed Experiences</string>
+    <string name="completed_experiences_activity_title">Yours completed experiences</string>
     <string name="gained_points">+ %d points</string>
+    <string name="next_objective_toast">What would be your next objective?</string>
+    <string name="experience_completed">EXPERIENCE COMPLETED</string>
+    <string name="gained_points_alert">You gained %d points!</string>
+    <string name="user_signed_out_toast">User signed out</string>
 </resources>

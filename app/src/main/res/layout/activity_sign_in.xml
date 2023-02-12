@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".activities.InitialActivity">
+    tools:context=".activities.SignInActivity">
 
     <ImageView
         android:id="@+id/logo_image"

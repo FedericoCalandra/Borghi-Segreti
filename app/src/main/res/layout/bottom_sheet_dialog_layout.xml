@@ -9,22 +9,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
         android:layout_marginTop="30dp"
+        android:gravity="center_vertical"
         android:layout_marginHorizontal="30dp">
 
         <ImageView
             android:id="@+id/experience_icon"
             android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/medal"/>
+            android:layout_height="80dp" />
 
         <TextView
             android:id="@+id/experience_title"
             android:textSize="@dimen/experienceTitleSize"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
+            android:gravity="center"
             android:layout_marginStart="10dp"/>
 
     </LinearLayout>
@@ -37,14 +36,19 @@
         android:layout_height="wrap_content"
         android:textAlignment="textStart"
         android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="30dp"/>
+        android:layout_marginHorizontal="40dp"/>
 
     <Button
         android:id="@+id/set_objective_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="@drawable/objective_button"
         android:text="@string/setObjective_buttonText"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:layout_marginBottom="20dp"
+        android:textColor="#656565"
         android:layout_marginTop="24dp" />
 
     <TextView
