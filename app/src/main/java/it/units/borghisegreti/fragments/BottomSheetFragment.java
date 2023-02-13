@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
+
 import it.units.borghisegreti.R;
 import it.units.borghisegreti.interfaces.Database;
 import it.units.borghisegreti.models.Experience;
@@ -50,6 +52,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         ImageView icon = view.findViewById(R.id.experience_icon);
         TextView title = view.findViewById(R.id.experience_title);
         TextView description = view.findViewById(R.id.experience_description);
+        TextView points = view.findViewById(R.id.experience_points);
         setObjButton = view.findViewById(R.id.set_objective_button);
 
         InputStream iconImage;
@@ -64,6 +67,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
 
         title.setText(experience.getName());
         description.setText(experience.getDescription());
+        points.setText(String.format(Locale.getDefault(), getString(R.string.gained_points), experience.getPoints()));
 
         if (experience.getIsCompletedByUser()) {
             setObjButton.setVisibility(View.GONE);

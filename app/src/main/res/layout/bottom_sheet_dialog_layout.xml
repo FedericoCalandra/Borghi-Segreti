@@ -40,6 +40,16 @@
         android:layout_marginTop="10dp"
         android:layout_marginHorizontal="40dp"/>
 
+    <TextView
+        android:id="@+id/experience_points"
+        android:textSize="@dimen/experience_points_text_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/warm_yellow"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="40dp"/>
+
     <Button
         android:id="@+id/set_objective_button"
         android:layout_width="wrap_content"
