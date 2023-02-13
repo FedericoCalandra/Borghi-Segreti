@@ -6,17 +6,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".activities.SignInActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:textSize="36sp"
+        android:text="@string/borghi_segreti"
+        android:gravity="center_horizontal"
+        android:textColor="#363B00"
+        android:typeface="serif"/>
 
     <ImageView
         android:id="@+id/logo_image"
         android:layout_width="match_parent"
         android:layout_height="@dimen/first_logo_height"
-        android:layout_marginTop="@dimen/first_logo_top_margin"
         android:cropToPadding="false"
-        android:paddingTop="@dimen/first_logo_top_padding"
         android:paddingBottom="@dimen/first_logo_bottom_padding"
-        app:srcCompat="@drawable/fui_ic_googleg_color_24dp"
+        app:srcCompat="@drawable/borghi_segreti"
         android:contentDescription="@string/application_logo_description" />
 
     <Button
@@ -25,7 +34,9 @@
         android:layout_height="wrap_content"
         android:elevation="@dimen/buttons_elevation"
         android:text="@string/log_in_button_text"
-        android:textColor="@color/blue"
-        android:layout_marginTop="@dimen/first_button_top_margin"/>
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/first_button_top_margin"
+        android:background="@drawable/sign_in_button" />
 
 </LinearLayout>

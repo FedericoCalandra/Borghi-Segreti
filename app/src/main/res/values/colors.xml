@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="dark_green">#363B00</color>
+    <color name="warm_yellow">#EFB406</color>
     <color name="cyan">#AADDF6</color>
     <color name="darker_cyan">#95D5F5</color>
     <color name="light_aquamarine">#ADEBDE</color>

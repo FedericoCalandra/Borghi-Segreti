@@ -16,7 +16,9 @@
         <ImageView
             android:id="@+id/experience_icon"
             android:layout_width="80dp"
-            android:layout_height="80dp" />
+            android:layout_height="80dp"
+            android:scaleX="2.5"
+            android:scaleY="2.5"/>
 
         <TextView
             android:id="@+id/experience_title"
@@ -48,7 +50,7 @@
         android:paddingHorizontal="20dp"
         android:paddingVertical="10dp"
         android:layout_marginBottom="20dp"
-        android:textColor="#656565"
+        android:textColor="@color/white"
         android:layout_marginTop="24dp" />
 
     <TextView
