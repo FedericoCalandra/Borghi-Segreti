@@ -1,6 +1,7 @@
 package it.units.borghisegreti.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +41,7 @@ import it.units.borghisegreti.utils.IconBuilder;
 public class MainActivityFragment extends Fragment {
 
     private static final String TAG = "MAIN_ACTIVITY";
+    private Context context;
     private View view;
     private Database database;
 
@@ -125,7 +128,7 @@ public class MainActivityFragment extends Fragment {
         experienceDescription.setText(objective.getDescription());
         InputStream iconImage;
         try {
-            IconBuilder builder = new IconBuilder(getContext(), objective);
+            IconBuilder builder = new IconBuilder(context, objective);
             iconImage = builder.getExperienceIcon();
             Drawable iconDrawable = Drawable.createFromStream(iconImage, null);
             experienceImage.setImageDrawable(iconDrawable);
@@ -190,5 +193,11 @@ public class MainActivityFragment extends Fragment {
 
         }
     };
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
 }

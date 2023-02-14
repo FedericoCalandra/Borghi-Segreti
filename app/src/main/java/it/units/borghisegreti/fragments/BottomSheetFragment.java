@@ -1,5 +1,6 @@
 package it.units.borghisegreti.fragments;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ import it.units.borghisegreti.utils.IconBuilder;
 public class BottomSheetFragment extends BottomSheetDialogFragment {
 
     private static final String TAG = "BOTTOM_SHEET_FRAGMENT";
+    private Context context;
     private Experience experience;
     private Database database;
     private Button setObjButton;
@@ -57,7 +59,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
 
         InputStream iconImage;
         try {
-            IconBuilder builder = new IconBuilder(getContext(), experience);
+            IconBuilder builder = new IconBuilder(context, experience);
             iconImage = builder.getExperienceIcon();
             Drawable iconDrawable = Drawable.createFromStream(iconImage, null);
             icon.setImageDrawable(iconDrawable);
@@ -93,6 +95,12 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
 }
