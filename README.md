@@ -1,3 +1,4 @@
+![Borghi Segreti](https://user-images.githubusercontent.com/94709756/218716224-16c5ce91-d80d-4d9d-9c9f-7ed9fa2aa852.png)
 # Borghi-Segreti
 App realizzata come progetto per il corso di Sistemi Integrati e Mobili dell'Università degli Studi di Trieste.
 
